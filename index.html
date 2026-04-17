@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>井字棋 · Tic Tac Toe</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-glow"></div>
+    
+    <main class="game-wrapper">
+        <header class="game-header">
+            <h1 class="title">
+                <span class="x-mark">X</span>
+                <span class="divider">/</span>
+                <span class="o-mark">O</span>
+            </h1>
+            <p class="subtitle" id="subtitle">不可战胜的 AI 对手</p>
+        </header>
+
+        <div class="mode-switch" id="mode-switch">
+            <button class="mode-btn active" data-mode="pve">人机</button>
+            <button class="mode-btn" data-mode="pvp">双人</button>
+            <button class="mode-btn" data-mode="aivsai">AI 对战</button>
+        </div>
+
+        <div class="scoreboard">
+            <div class="score-card player-x">
+                <span class="label">玩家 (X)</span>
+                <span class="score" id="score-x">0</span>
+            </div>
+            <div class="score-card draws">
+                <span class="label">平局</span>
+                <span class="score" id="score-draw">0</span>
+            </div>
+            <div class="score-card player-o">
+                <span class="label">AI (O)</span>
+                <span class="score" id="score-o">0</span>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <span id="status-text">你的回合</span>
+        </div>
+
+        <div class="board" id="board">
+            <div class="cell" data-index="0"></div>
+            <div class="cell" data-index="1"></div>
+            <div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div>
+            <div class="cell" data-index="4"></div>
+            <div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div>
+            <div class="cell" data-index="7"></div>
+            <div class="cell" data-index="8"></div>
+            
+            <svg class="win-line" id="win-line" viewBox="0 0 300 300" preserveAspectRatio="none">
+                <line x1="0" y1="0" x2="0" y2="0" stroke-width="8" stroke-linecap="round" />
+            </svg>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-restart" id="restart-btn">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                </svg>
+                再来一局
+            </button>
+        </div>
+    </main>
+
+    <div class="modal" id="result-modal">
+        <div class="modal-content">
+            <div class="modal-icon" id="modal-icon"></div>
+            <h2 id="modal-title">游戏结束</h2>
+            <p id="modal-message">恭喜获胜！</p>
+            <button class="btn btn-primary" id="modal-btn">再来一局</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
