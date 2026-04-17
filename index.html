@@ -26,9 +26,10 @@
             <button class="mode-btn active" data-mode="pve" data-i18n="mode-pve">人机</button>
             <button class="mode-btn" data-mode="pvp" data-i18n="mode-pvp">双人</button>
             <button class="mode-btn" data-mode="aivsai" data-i18n="mode-aivsai">AI 对战</button>
+            <button class="mode-btn" data-mode="connect4" data-i18n="mode-connect4">四子棋</button>
         </div>
 
-        <div class="scoreboard">
+        <div class="scoreboard" id="scoreboard">
             <div class="score-card player-x">
                 <span class="label" data-i18n="label-player-x">玩家 (X)</span>
                 <span class="score" id="score-x">0</span>
@@ -47,6 +48,7 @@
             <span id="status-text" data-i18n="status-your-turn">你的回合</span>
         </div>
 
+        <!-- Tic Tac Toe Board -->
         <div class="board" id="board">
             <div class="cell" data-index="0"></div>
             <div class="cell" data-index="1"></div>
@@ -58,6 +60,14 @@
             <div class="cell" data-index="7"></div>
             <div class="cell" data-index="8"></div>
             <svg class="win-line" id="win-line" viewBox="0 0 300 300" preserveAspectRatio="none">
+                <line x1="0" y1="0" x2="0" y2="0" stroke-width="8" stroke-linecap="round" />
+            </svg>
+        </div>
+
+        <!-- Connect Four Board -->
+        <div class="connect4-board" id="connect4-board">
+            <div class="c4-cells" id="c4-cells"></div>
+            <svg class="c4-win-line" id="c4-win-line" viewBox="0 0 700 600" preserveAspectRatio="none">
                 <line x1="0" y1="0" x2="0" y2="0" stroke-width="8" stroke-linecap="round" />
             </svg>
         </div>
@@ -154,6 +164,15 @@
                 </div>
             </div>
 
+            <!-- 3D Board -->
+            <div class="setting-row">
+                <span class="setting-label" data-i18n="setting-3d">3D 棋盘</span>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-3d">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
             <!-- Animations -->
             <div class="setting-row">
                 <span class="setting-label" data-i18n="setting-animations">动画效果</span>
@@ -190,7 +209,37 @@
                     <button class="seg-btn" data-sound="electronic" data-i18n="sound-electronic">电子</button>
                     <button class="seg-btn" data-sound="retro" data-i18n="sound-retro">复古</button>
                     <button class="seg-btn" data-sound="wood" data-i18n="sound-wood">木琴</button>
+                    <button class="seg-btn" data-sound="bell" data-i18n="sound-bell">铃铛</button>
+                    <button class="seg-btn" data-sound="space" data-i18n="sound-space">太空</button>
+                    <button class="seg-btn" data-sound="drum" data-i18n="sound-drum">鼓点</button>
+                    <button class="seg-btn" data-sound="piano" data-i18n="sound-piano">钢琴</button>
                 </div>
+            </div>
+
+            <!-- Sound Customization -->
+            <div class="sound-custom-panel" id="sound-custom-panel">
+                <div class="setting-group">
+                    <div class="slider-header">
+                        <label class="setting-label sub" data-i18n="sound-pitch">音高</label>
+                        <span class="slider-value" id="pitch-value">0</span>
+                    </div>
+                    <input type="range" class="range-slider" id="pitch-slider" min="-12" max="12" value="0" step="1">
+                </div>
+                <div class="setting-group">
+                    <div class="slider-header">
+                        <label class="setting-label sub" data-i18n="sound-duration">音长</label>
+                        <span class="slider-value" id="duration-value">100%</span>
+                    </div>
+                    <input type="range" class="range-slider" id="duration-slider" min="50" max="200" value="100">
+                </div>
+                <div class="setting-group">
+                    <div class="slider-header">
+                        <label class="setting-label sub" data-i18n="sound-volume">音量</label>
+                        <span class="slider-value" id="volume-value">80%</span>
+                    </div>
+                    <input type="range" class="range-slider" id="volume-slider" min="0" max="100" value="80">
+                </div>
+                <button class="btn btn-test-sound" id="test-sound-btn" data-i18n="sound-test">试听</button>
             </div>
 
             <!-- AI Difficulty -->

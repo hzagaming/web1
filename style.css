@@ -73,7 +73,8 @@ body.animations-off *::after {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
 }
-body.animations-off .win-line { opacity: 1 !important; }
+body.animations-off .win-line,
+body.animations-off .c4-win-line { opacity: 1 !important; }
 
 /* ===== Background Glow ===== */
 .bg-glow {
@@ -150,9 +151,9 @@ body.animations-off .win-line { opacity: 1 !important; }
     border: none;
     background: transparent;
     color: var(--text-muted);
-    padding: 0.55rem 0.2rem;
+    padding: 0.55rem 0.1rem;
     border-radius: 10px;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.25s ease;
@@ -232,7 +233,7 @@ body.animations-off .win-line { opacity: 1 !important; }
     box-shadow: 0 0 15px rgba(78, 205, 196, 0.2) inset;
 }
 
-/* ===== Board ===== */
+/* ===== Tic Tac Toe Board ===== */
 .board {
     position: relative;
     display: grid;
@@ -245,7 +246,12 @@ body.animations-off .win-line { opacity: 1 !important; }
     border-radius: 24px;
     padding: 12px;
     box-shadow: var(--shadow);
-    transition: background 0.35s ease;
+    transition: background 0.35s ease, transform 0.6s ease;
+    transform-style: preserve-3d;
+}
+
+.board.is-3d {
+    transform: perspective(900px) rotateX(15deg) rotateY(-5deg);
 }
 
 .cell {
@@ -333,6 +339,105 @@ body.animations-off .win-line { opacity: 1 !important; }
 }
 
 @keyframes line-draw {
+    to { stroke-dashoffset: 0; }
+}
+
+/* ===== Connect Four ===== */
+.connect4-board {
+    position: relative;
+    display: none;
+    width: 100%;
+    aspect-ratio: 7 / 6;
+    background: var(--surface);
+    border-radius: 24px;
+    padding: 10px;
+    box-shadow: var(--shadow);
+    transition: background 0.35s ease, transform 0.6s ease;
+    transform-style: preserve-3d;
+    overflow: hidden;
+}
+
+.connect4-board.is-3d {
+    transform: perspective(900px) rotateX(12deg) rotateY(-3deg);
+}
+
+.connect4-board.show { display: block; }
+
+.c4-cells {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 6px;
+    width: 100%;
+    height: 100%;
+}
+
+.c4-cell {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--surface-light);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    transition: transform 0.2s ease, background 0.2s ease;
+    overflow: hidden;
+}
+
+.c4-cell:hover {
+    background: color-mix(in srgb, var(--surface-light) 80%, var(--text) 5%);
+}
+
+.c4-cell.disabled {
+    cursor: default;
+    pointer-events: none;
+}
+
+.c4-cell .c4-piece {
+    width: 78%;
+    height: 78%;
+    border-radius: 50%;
+    animation: c4-drop calc(0.4s * var(--anim-scale)) cubic-bezier(0.5, 0, 0.5, 1.3) forwards;
+    box-shadow: inset 0 -3px 6px rgba(0,0,0,0.3), inset 0 3px 6px rgba(255,255,255,0.15);
+}
+
+.c4-piece.x-piece {
+    background: linear-gradient(135deg, var(--x-color), color-mix(in srgb, var(--x-color) 70%, #000));
+}
+
+.c4-piece.o-piece {
+    background: linear-gradient(135deg, var(--o-color), color-mix(in srgb, var(--o-color) 70%, #000));
+}
+
+@keyframes c4-drop {
+    from { transform: translateY(-300%) scale(0.5); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.c4-win-line {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.1s ease;
+}
+
+.c4-win-line.show { opacity: 1; }
+
+.c4-win-line line {
+    stroke: #fff;
+    filter: drop-shadow(0 0 6px var(--win-glow));
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
+    animation: c4-line-draw calc(0.5s * var(--anim-scale)) ease-out forwards;
+}
+
+@keyframes c4-line-draw {
     to { stroke-dashoffset: 0; }
 }
 
@@ -502,12 +607,12 @@ body.animations-off .win-line { opacity: 1 !important; }
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 1.75rem;
+    gap: 1.5rem;
     overflow-y: auto;
 }
 
 /* ===== Settings UI Components ===== */
-.setting-group { display: flex; flex-direction: column; gap: 0.6rem; }
+.setting-group { display: flex; flex-direction: column; gap: 0.5rem; }
 .setting-row { display: flex; justify-content: space-between; align-items: center; }
 
 .setting-label {
@@ -519,6 +624,7 @@ body.animations-off .win-line { opacity: 1 !important; }
 .setting-label.sub {
     font-size: 0.8rem;
     color: var(--text-muted);
+    font-weight: 500;
 }
 
 .segmented {
@@ -527,6 +633,7 @@ body.animations-off .win-line { opacity: 1 !important; }
     border-radius: 10px;
     padding: 3px;
     gap: 3px;
+    flex-wrap: wrap;
 }
 
 .seg-btn {
@@ -536,12 +643,13 @@ body.animations-off .win-line { opacity: 1 !important; }
     color: var(--text-muted);
     padding: 0.45rem 0.2rem;
     border-radius: 8px;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: inherit;
     white-space: nowrap;
+    min-width: 0;
 }
 
 .seg-btn:hover { color: var(--text); }
@@ -565,7 +673,7 @@ body.animations-off .win-line { opacity: 1 !important; }
     color: var(--text-muted);
     padding: 0.5rem 0.1rem;
     border-radius: 8px;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -693,6 +801,32 @@ body.animations-off .win-line { opacity: 1 !important; }
 .switch input:checked + .slider { background: var(--accent); }
 .switch input:checked + .slider::before { transform: translateX(22px); }
 
+/* Sound Custom Panel */
+.sound-custom-panel {
+    background: var(--surface-light);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.btn-test-sound {
+    background: var(--surface);
+    color: var(--text);
+    padding: 0.6rem;
+    border-radius: 10px;
+    border: 1px solid var(--surface-light);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+.btn-test-sound:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
 /* ===== Changelog ===== */
 .changelog-content {
     max-width: 480px;
@@ -785,4 +919,5 @@ body.animations-off .win-line { opacity: 1 !important; }
     .game-wrapper { gap: 1rem; }
     .lang-grid { grid-template-columns: repeat(5, 1fr); }
     .color-picker { grid-template-columns: repeat(5, 1fr); }
+    .c4-cell { gap: 4px; }
 }
