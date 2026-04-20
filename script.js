@@ -572,7 +572,7 @@
         if (settings.difficulty === diff) return;
         settings.difficulty = diff;
         applySettingsUI();
-        if (currentMode === 'pve' || currentMode === 'connect4' || currentMode === 'gomoku' || currentMode === 'custom') resetGame();
+        if (getEffectiveBattleMode() !== 'pvp') resetGame();
     }
 
     function setCustomBoardSize(size) {
@@ -928,7 +928,7 @@
                 if (!gameActive) return;
                 const aiMove = getAiMove(gameBoard, PLAYER_O);
                 makeMove(aiMove, PLAYER_O);
-                lockBoard(false);
+                if (gameActive) lockBoard(false);
             }, delay);
         }
     }
@@ -973,7 +973,7 @@
                     const aiRow = getC4NextOpenRow(aiCol);
                     makeC4Move(aiRow, aiCol, PLAYER_O);
                 }
-                lockC4Board(false);
+                if (gameActive) lockC4Board(false);
             }, delay);
         }
     }
@@ -1227,7 +1227,7 @@
                 if (!gameActive) return;
                 const aiMove = getGmkAiMove(PLAYER_O);
                 if (aiMove) makeGmkMove(aiMove.r, aiMove.c, PLAYER_O);
-                lockGmkBoard(false);
+                if (gameActive) lockGmkBoard(false);
             }, delay);
         }
     }
@@ -1571,7 +1571,7 @@
                         const aiRow = getC4NextOpenRow(aiCol);
                         makeC4Move(aiRow, aiCol, PLAYER_O);
                     }
-                    lockC4Board(false);
+                    if (gameActive) lockC4Board(false);
                 }, delay);
             } else if (bm === 'aivsai') {
                 startC4AiVsAi();
@@ -1582,12 +1582,7 @@
                 rebuildCustomBoard();
             } else {
                 gmkBoard = Array(GMK_SIZE).fill(null).map(() => Array(GMK_SIZE).fill(''));
-                gomokuCellsContainer.style.gridTemplateColumns = `repeat(${GMK_SIZE}, 1fr)`;
-                gomokuCellsContainer.style.gridTemplateRows = `repeat(${GMK_SIZE}, 1fr)`;
-                document.querySelectorAll('.gomoku-cell').forEach(cell => {
-                    cell.innerHTML = '';
-                    cell.classList.remove('disabled');
-                });
+                buildGomokuCells();
             }
             gomokuBoard.style.display = 'block';
             boardEl.style.display = 'none';
@@ -1601,7 +1596,7 @@
                     if (!gameActive) return;
                     const aiMove = getGmkAiMove(PLAYER_O);
                     if (aiMove) makeGmkMove(aiMove.r, aiMove.c, PLAYER_O);
-                    lockGmkBoard(false);
+                    if (gameActive) lockGmkBoard(false);
                 }, delay);
             } else if (bm === 'aivsai') {
                 startGmkAiVsAi();
