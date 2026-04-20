@@ -1402,7 +1402,7 @@
         }
         candidates.sort((a, b) => a.dist - b.dist);
         const top = candidates.slice(0, Math.min(candidates.length, 20));
-        return top[Math.floor(Math.random() * top.length)];
+        return top.length > 0 ? top[Math.floor(Math.random() * top.length)] : null;
     }
 
     function getGmkBestMove(board, cfg, aiPlayer, humanPlayer) {
@@ -1530,8 +1530,9 @@
     }
 
     function getWinnerText(winner) {
-        if (currentMode === 'aivsai') return (winner === PLAYER_X ? t('label-player-x-ai') : t('label-player-o-ai')) + ' ' + t('modal-win');
-        if (currentMode === 'pvp') return winner === PLAYER_X ? t('modal-player1-wins') : t('modal-player2-wins');
+        const bm = getEffectiveBattleMode();
+        if (bm === 'aivsai') return (winner === PLAYER_X ? t('label-player-x-ai') : t('label-player-o-ai')) + ' ' + t('modal-win');
+        if (bm === 'pvp') return winner === PLAYER_X ? t('modal-player1-wins') : t('modal-player2-wins');
         return winner === PLAYER_X ? t('modal-you-win') : t('modal-ai-wins');
     }
 
@@ -1582,7 +1583,15 @@
                 rebuildCustomBoard();
             } else {
                 gmkBoard = Array(GMK_SIZE).fill(null).map(() => Array(GMK_SIZE).fill(''));
-                buildGomokuCells();
+                const neededCells = GMK_SIZE * GMK_SIZE;
+                if (gomokuCellsContainer.children.length !== neededCells) {
+                    buildGomokuCells();
+                } else {
+                    document.querySelectorAll('.gomoku-cell').forEach(cell => {
+                        cell.innerHTML = '';
+                        cell.classList.remove('disabled');
+                    });
+                }
             }
             gomokuBoard.style.display = 'block';
             boardEl.style.display = 'none';
@@ -1762,6 +1771,9 @@
             if (aiCol !== -1) {
                 const aiRow = getC4NextOpenRow(aiCol);
                 makeC4Move(aiRow, aiCol, currentPlayer);
+            } else if (gameActive) {
+                endC4Game(true);
+                return;
             }
             if (gameActive) {
                 startC4AiVsAi();
@@ -1782,7 +1794,12 @@
             if (!gameActive || !isGmkMode()) return;
             if (getEffectiveBattleMode() !== 'aivsai') return;
             const aiMove = getGmkAiMove(currentPlayer);
-            if (aiMove) makeGmkMove(aiMove.r, aiMove.c, currentPlayer);
+            if (aiMove) {
+                makeGmkMove(aiMove.r, aiMove.c, currentPlayer);
+            } else if (gameActive) {
+                endGmkGame(true);
+                return;
+            }
             if (gameActive) {
                 startGmkAiVsAi();
             } else {
