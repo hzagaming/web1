@@ -202,6 +202,7 @@
             'diff-medium': { zh:'中等', en:'Medium', ja:'普通', ko:'보통', fr:'Moyen', de:'Mittel', es:'Medio', ru:'Средне', it:'Medio', pt:'Médio' },
             'diff-hard': { zh:'困难', en:'Hard', ja:'難しい', ko:'어려움', fr:'Difficile', de:'Schwer', es:'Difícil', ru:'Сложно', it:'Difficile', pt:'Difícil' },
             'changelog-title': { zh:'更新公告', en:'Changelog', ja:'更新履歴', ko:'업데이트 공지', fr:'Mises à jour', de:'Änderungen', es:'Actualizaciones', ru:'Обновления', it:'Aggiornamenti', pt:'Atualizações' },
+            'custom-win-label': { zh:'子连珠', en:' in a row', ja:'子連珠', ko:'목', fr:' alignés', de:' in einer Reihe', es:' en línea', ru:' в ряд', it:' in fila', pt:' em linha' },
         };
         const out = {};
         for (const [key, langs] of Object.entries(c)) {
@@ -363,7 +364,7 @@
         else if (currentMode === 'aivsai') subtitle.textContent = t('subtitle-aivsai');
         else if (currentMode === 'connect4') subtitle.textContent = bm === 'pvp' ? t('subtitle-connect4') + ' — ' + t('subtitle-pvp') : bm === 'aivsai' ? t('subtitle-connect4') + ' — ' + t('subtitle-aivsai') : t('subtitle-connect4');
         else if (currentMode === 'gomoku') subtitle.textContent = bm === 'pvp' ? t('subtitle-gomoku') + ' — ' + t('subtitle-pvp') : bm === 'aivsai' ? t('subtitle-gomoku') + ' — ' + t('subtitle-aivsai') : t('subtitle-gomoku');
-        else subtitle.textContent = bm === 'pvp' ? t('subtitle-custom') + ' — ' + t('subtitle-pvp') : bm === 'aivsai' ? t('subtitle-custom') + ' — ' + t('subtitle-aivsai') : t('subtitle-custom');
+        else subtitle.textContent = bm === 'pvp' ? getCustomSubtitle() + ' — ' + t('subtitle-pvp') : bm === 'aivsai' ? getCustomSubtitle() + ' — ' + t('subtitle-aivsai') : getCustomSubtitle();
         renderChangelog();
     }
 
@@ -433,9 +434,9 @@
         volumeSlider.addEventListener('input', e => { settings.soundVolume = parseInt(e.target.value); volumeValue.textContent = settings.soundVolume + '%'; });
         testSoundBtn.addEventListener('click', () => { initAudio(); playMoveSound(PLAYER_X); });
 
-        customWinLenInput.addEventListener('change', e => { customConfig.winLen = clamp(parseInt(e.target.value) || 5, 3, 20); customWinLenInput.value = customConfig.winLen; if (currentMode === 'custom') resetGame(); });
-        customBoardWInput.addEventListener('change', e => { customConfig.w = clamp(parseInt(e.target.value) || 15, 3, 20); customBoardWInput.value = customConfig.w; if (currentMode === 'custom') resetGame(); });
-        customBoardHInput.addEventListener('change', e => { customConfig.h = clamp(parseInt(e.target.value) || 15, 3, 20); customBoardHInput.value = customConfig.h; if (currentMode === 'custom') resetGame(); });
+        customWinLenInput.addEventListener('change', e => { customConfig.winLen = clamp(parseInt(e.target.value) || 5, 3, 20); customWinLenInput.value = customConfig.winLen; if (currentMode === 'custom') { subtitle.textContent = getCustomSubtitle(); resetGame(); } });
+        customBoardWInput.addEventListener('change', e => { customConfig.w = clamp(parseInt(e.target.value) || 15, 3, 20); customBoardWInput.value = customConfig.w; if (currentMode === 'custom') { subtitle.textContent = getCustomSubtitle(); resetGame(); } });
+        customBoardHInput.addEventListener('change', e => { customConfig.h = clamp(parseInt(e.target.value) || 15, 3, 20); customBoardHInput.value = customConfig.h; if (currentMode === 'custom') { subtitle.textContent = getCustomSubtitle(); resetGame(); } });
 
         changelogBtn.addEventListener('click', openChangelog);
         changelogClose.addEventListener('click', closeChangelog);
@@ -586,7 +587,7 @@
         customWinLenInput.value = customConfig.winLen;
         customBoardWInput.value = customConfig.w;
         customBoardHInput.value = customConfig.h;
-        if (currentMode === 'custom') resetGame();
+        if (currentMode === 'custom') { subtitle.textContent = getCustomSubtitle(); resetGame(); }
     }
 
     function applySettingsUI() {
@@ -608,6 +609,8 @@
         durationValue.textContent = settings.soundDuration + '%';
         volumeSlider.value = settings.soundVolume;
         volumeValue.textContent = settings.soundVolume + '%';
+        aiDifficultyGroup.style.display = getEffectiveBattleMode() !== 'pvp' ? 'flex' : 'none';
+        customGameGroup.style.display = currentMode === 'custom' ? 'flex' : 'none';
         document.documentElement.setAttribute('data-theme', settings.theme);
         document.body.setAttribute('data-font', settings.font);
         document.body.classList.toggle('animations-off', !settings.animations);
@@ -859,20 +862,20 @@
         else if (currentMode === 'aivsai') subtitle.textContent = t('subtitle-aivsai');
         else if (currentMode === 'connect4') subtitle.textContent = bm2 === 'pvp' ? t('subtitle-connect4') + ' — ' + t('subtitle-pvp') : bm2 === 'aivsai' ? t('subtitle-connect4') + ' — ' + t('subtitle-aivsai') : t('subtitle-connect4');
         else if (currentMode === 'gomoku') subtitle.textContent = bm2 === 'pvp' ? t('subtitle-gomoku') + ' — ' + t('subtitle-pvp') : bm2 === 'aivsai' ? t('subtitle-gomoku') + ' — ' + t('subtitle-aivsai') : t('subtitle-gomoku');
-        else subtitle.textContent = bm2 === 'pvp' ? t('subtitle-custom') + ' — ' + t('subtitle-pvp') : bm2 === 'aivsai' ? t('subtitle-custom') + ' — ' + t('subtitle-aivsai') : t('subtitle-custom');
+        else subtitle.textContent = bm2 === 'pvp' ? getCustomSubtitle() + ' — ' + t('subtitle-pvp') : bm2 === 'aivsai' ? getCustomSubtitle() + ' — ' + t('subtitle-aivsai') : getCustomSubtitle();
 
         // Show battle-switch for board games that need sub-modes
         const boardGames = ['connect4', 'gomoku', 'custom'];
         if (boardGames.includes(currentMode)) {
-            battleSwitch.style.display = 'flex';
+            battleSwitch.classList.add('show');
         } else {
-            battleSwitch.style.display = 'none';
+            battleSwitch.classList.remove('show');
             battleMode = currentMode; // sync for ttt modes
         }
 
-        const aiModes = ['pve', 'connect4', 'gomoku', 'custom'];
-        aiDifficultyGroup.style.display = aiModes.includes(currentMode) ? 'flex' : 'none';
+        aiDifficultyGroup.style.display = getEffectiveBattleMode() !== 'pvp' ? 'flex' : 'none';
         customGameGroup.style.display = currentMode === 'custom' ? 'flex' : 'none';
+        resetScores();
         updateScoreLabels();
         resetGame();
     }
@@ -885,7 +888,9 @@
         const bm = getEffectiveBattleMode();
         if (currentMode === 'connect4') subtitle.textContent = bm === 'pvp' ? t('subtitle-connect4') + ' — ' + t('subtitle-pvp') : bm === 'aivsai' ? t('subtitle-connect4') + ' — ' + t('subtitle-aivsai') : t('subtitle-connect4');
         else if (currentMode === 'gomoku') subtitle.textContent = bm === 'pvp' ? t('subtitle-gomoku') + ' — ' + t('subtitle-pvp') : bm === 'aivsai' ? t('subtitle-gomoku') + ' — ' + t('subtitle-aivsai') : t('subtitle-gomoku');
-        else if (currentMode === 'custom') subtitle.textContent = bm === 'pvp' ? t('subtitle-custom') + ' — ' + t('subtitle-pvp') : bm === 'aivsai' ? t('subtitle-custom') + ' — ' + t('subtitle-aivsai') : t('subtitle-custom');
+        else if (currentMode === 'custom') subtitle.textContent = bm === 'pvp' ? getCustomSubtitle() + ' — ' + t('subtitle-pvp') : bm === 'aivsai' ? getCustomSubtitle() + ' — ' + t('subtitle-aivsai') : getCustomSubtitle();
+        aiDifficultyGroup.style.display = getEffectiveBattleMode() !== 'pvp' ? 'flex' : 'none';
+        resetScores();
         updateScoreLabels();
         resetGame();
     }
@@ -904,11 +909,25 @@
         return currentMode;
     }
 
+    function getCustomSubtitle() {
+        return t('subtitle-custom') + ' — ' + customConfig.w + '×' + customConfig.h + ' · ' + customConfig.winLen + t('custom-win-label');
+    }
+
+    function resetScores() {
+        scores = { X: 0, O: 0, draw: 0 };
+        scoreXEl.textContent = '0';
+        scoreOEl.textContent = '0';
+        scoreDrawEl.textContent = '0';
+    }
+
     function getTurnText() {
         const bm = getEffectiveBattleMode();
-        if (bm === 'aivsai') return currentPlayer === PLAYER_X ? t('status-ai-x-thinking') : t('status-ai-o-thinking');
-        if (bm === 'pvp') return currentPlayer === PLAYER_X ? t('status-player1-turn') : t('status-player2-turn');
-        return currentPlayer === PLAYER_X ? t('status-your-turn') : t('status-ai-thinking');
+        let text;
+        if (bm === 'aivsai') text = currentPlayer === PLAYER_X ? t('status-ai-x-thinking') : t('status-ai-o-thinking');
+        else if (bm === 'pvp') text = currentPlayer === PLAYER_X ? t('status-player1-turn') : t('status-player2-turn');
+        else text = currentPlayer === PLAYER_X ? t('status-your-turn') : t('status-ai-thinking');
+        if (currentMode === 'custom') text += ' · ' + customConfig.winLen + t('custom-win-label');
+        return text;
     }
 
     /* ===== Tic Tac Toe ===== */
