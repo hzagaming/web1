@@ -260,6 +260,22 @@
     /* ===== Changelog Data ===== */
     const changelogData = [
         {
+            version: '0.5.1',
+            date: { zh:'2026-04-20', en:'Apr 20, 2026', ja:'2026年4月20日', ko:'2026년 4월 20일', fr:'20 avr. 2026', de:'20. Apr. 2026', es:'20 abr. 2026', ru:'20 апр. 2026', it:'20 apr. 2026', pt:'20 de abr. de 2026' },
+            items: {
+                zh: ['修复 3D 拖拽在触屏设备上阻断棋盘点击的问题', '修复 getBoardRot 未设置 CSS 变量时返回 0 导致首次拖拽跳变', '修复 onDragMove 中 e.touches 为空数组时的潜在异常', '修复 12 处 parseInt 缺少 radix 参数的问题'],
+                en: ['Fixed 3D drag blocking board clicks on touch devices', 'Fixed getBoardRot returning 0 when CSS vars unset causing jump on first drag', 'Fixed potential crash when e.touches is empty in onDragMove', 'Fixed 12 missing radix parameters in parseInt calls'],
+                ja: ['3Dドラッグがタッチデバイスで盤面クリックを遮断する問題を修正','getBoardRot が CSS 変数未設定時に 0 を返し最初のドラッグが跳ねる問題を修正','onDragMove で e.touches が空の場合の潜在的クラッシュを修正','12 箇所の parseInt radix 不足を修正'],
+                ko: ['3D 드래그가 터치 기기에서 보드 클릭을 차단하는 문제 수정','getBoardRot 이 CSS 변수 미설정 시 0을 반환하여 첫 드래그가 튀는 문제 수정','onDragMove 에서 e.touches 가 빈 경우 잠재적 충돌 수정','12개 parseInt radix 누락 수정'],
+                fr: ['Correction glisser-déposer 3D bloquant les clics sur écran tactile','Correction getBoardRot retournant 0 sans variable CSS causant un saut','Correction crash potentiel si e.touches vide dans onDragMove','Correction 12 paramètres radix manquants dans parseInt'],
+                de: ['3D-Ziehen blockiert Tippen auf Touch-Geräten korrigiert','getBoardRot gibt 0 zurück wenn CSS-Variablen nicht gesetzt – korrigiert','Potenzieller Absturz bei leerem e.touches in onDragMove korrigiert','12 fehlende radix-Parameter in parseInt korrigiert'],
+                es: ['Corregido arrastre 3D bloqueando clics en dispositivos táctiles','Corregido getBoardRot devolviendo 0 sin vars CSS causando salto','Corregido posible crash si e.touches vacío en onDragMove','Corregidos 12 parámetros radix faltantes en parseInt'],
+                ru: ['Исправлено: 3D-перетаскивание блокирует нажатия на сенсорных устройствах','Исправлено: getBoardRot возвращает 0 при незаданных CSS-переменных','Исправлен потенциальный сбой при пустом e.touches в onDragMove','Исправлены 12 отсутствующих параметров radix в parseInt'],
+                it: ['Corretto trascinamento 3D che blocca i tocchi su dispositivi touch','Corretto getBoardRot che restituisce 0 senza variabili CSS','Corretto potenziale crash con e.touches vuoto in onDragMove','Corretti 12 parametri radix mancanti in parseInt'],
+                pt: ['Corrigido arrasto 3D bloqueando toques em dispositivos touch','Corrigido getBoardRot retornando 0 sem vars CSS causando pulo','Corrigido possível crash com e.touches vazio em onDragMove','Corrigidos 12 parâmetros radix ausentes em parseInt'],
+            }
+        },
+        {
             version: '0.5.0',
             date: { zh:'2026-04-20', en:'Apr 20, 2026', ja:'2026年4月20日', ko:'2026년 4월 20일', fr:'20 avr. 2026', de:'20. Apr. 2026', es:'20 abr. 2026', ru:'20 апр. 2026', it:'20 apr. 2026', pt:'20 de abr. de 2026' },
             items: {
@@ -537,9 +553,9 @@
         contrastSlider.addEventListener('input', e => setContrast(e.target.value));
         customColorInput.addEventListener('input', e => setAccentColor(e.target.value, true));
 
-        pitchSlider.addEventListener('input', e => { settings.soundPitch = parseInt(e.target.value); pitchValue.textContent = (settings.soundPitch > 0 ? '+' : '') + settings.soundPitch; });
-        durationSlider.addEventListener('input', e => { settings.soundDuration = parseInt(e.target.value); durationValue.textContent = settings.soundDuration + '%'; });
-        volumeSlider.addEventListener('input', e => { settings.soundVolume = parseInt(e.target.value); volumeValue.textContent = settings.soundVolume + '%'; });
+        pitchSlider.addEventListener('input', e => { settings.soundPitch = parseInt(e.target.value, 10); pitchValue.textContent = (settings.soundPitch > 0 ? '+' : '') + settings.soundPitch; });
+        durationSlider.addEventListener('input', e => { settings.soundDuration = parseInt(e.target.value, 10); durationValue.textContent = settings.soundDuration + '%'; });
+        volumeSlider.addEventListener('input', e => { settings.soundVolume = parseInt(e.target.value, 10); volumeValue.textContent = settings.soundVolume + '%'; });
         testSoundBtn.addEventListener('click', () => { initAudio(); playMoveSound(PLAYER_X); });
 
         function validateCustomConfig() {
@@ -549,9 +565,9 @@
                 customWinLenInput.value = minDim;
             }
         }
-        customWinLenInput.addEventListener('change', e => { const v = parseInt(e.target.value); customConfig.winLen = clamp(isNaN(v) ? 5 : v, 3, 20); validateCustomConfig(); if (currentMode === 'custom') { subtitle.textContent = getCustomSubtitle(); resetGame(); } });
-        customBoardWInput.addEventListener('change', e => { const v = parseInt(e.target.value); customConfig.w = clamp(isNaN(v) ? 15 : v, 3, 20); validateCustomConfig(); customBoardWInput.value = customConfig.w; if (currentMode === 'custom') { subtitle.textContent = getCustomSubtitle(); resetGame(); } });
-        customBoardHInput.addEventListener('change', e => { const v = parseInt(e.target.value); customConfig.h = clamp(isNaN(v) ? 15 : v, 3, 20); validateCustomConfig(); customBoardHInput.value = customConfig.h; if (currentMode === 'custom') { subtitle.textContent = getCustomSubtitle(); resetGame(); } });
+        customWinLenInput.addEventListener('change', e => { const v = parseInt(e.target.value, 10); customConfig.winLen = clamp(isNaN(v) ? 5 : v, 3, 20); validateCustomConfig(); if (currentMode === 'custom') { subtitle.textContent = getCustomSubtitle(); resetGame(); } });
+        customBoardWInput.addEventListener('change', e => { const v = parseInt(e.target.value, 10); customConfig.w = clamp(isNaN(v) ? 15 : v, 3, 20); validateCustomConfig(); customBoardWInput.value = customConfig.w; if (currentMode === 'custom') { subtitle.textContent = getCustomSubtitle(); resetGame(); } });
+        customBoardHInput.addEventListener('change', e => { const v = parseInt(e.target.value, 10); customConfig.h = clamp(isNaN(v) ? 15 : v, 3, 20); validateCustomConfig(); customBoardHInput.value = customConfig.h; if (currentMode === 'custom') { subtitle.textContent = getCustomSubtitle(); resetGame(); } });
 
         changelogBtn.addEventListener('click', openChangelog);
         changelogClose.addEventListener('click', closeChangelog);
@@ -768,11 +784,20 @@
 
     /* ===== 3D Board Drag Rotation ===== */
     const defaultRot = { ttt: { x: 15, y: -5 }, c4: { x: 12, y: -3 }, gmk: { x: 10, y: -4 } };
-    const rotState = { active: false, startX: 0, startY: 0, startRotX: 0, startRotY: 0, board: null };
+    const rotState = { active: false, startX: 0, startY: 0, startRotX: 0, startRotY: 0, board: null, moved: false };
+
+    function getBoardDefaultRot(board) {
+        if (board === boardEl) return defaultRot.ttt;
+        if (board === connect4Board) return defaultRot.c4;
+        return defaultRot.gmk;
+    }
 
     function getBoardRot(board) {
-        const x = parseFloat(board.style.getPropertyValue('--rot-x')) || 0;
-        const y = parseFloat(board.style.getPropertyValue('--rot-y')) || 0;
+        const rawX = board.style.getPropertyValue('--rot-x');
+        const rawY = board.style.getPropertyValue('--rot-y');
+        const def = getBoardDefaultRot(board);
+        const x = rawX ? parseFloat(rawX) : def.x;
+        const y = rawY ? parseFloat(rawY) : def.y;
         return { x, y };
     }
 
@@ -783,9 +808,11 @@
 
     function onDragStart(e, board) {
         if (!settings.board3d) return;
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        if (e.type === 'mousedown' && e.button !== 0) return;
+        const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
         rotState.active = true;
+        rotState.moved = false;
         rotState.startX = clientX;
         rotState.startY = clientY;
         rotState.board = board;
@@ -793,22 +820,28 @@
         rotState.startRotX = rot.x;
         rotState.startRotY = rot.y;
         board.classList.add('dragging');
-        e.preventDefault();
     }
 
     function onDragMove(e) {
         if (!rotState.active || !rotState.board) return;
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
         const dx = clientX - rotState.startX;
         const dy = clientY - rotState.startY;
-        setBoardRot(rotState.board, rotState.startRotX - dy * 0.4, rotState.startRotY + dx * 0.4);
+        if (!rotState.moved && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) {
+            rotState.moved = true;
+            if (e.cancelable) e.preventDefault();
+        }
+        if (rotState.moved) {
+            setBoardRot(rotState.board, rotState.startRotX - dy * 0.4, rotState.startRotY + dx * 0.4);
+        }
     }
 
     function onDragEnd() {
         if (!rotState.active || !rotState.board) return;
         rotState.board.classList.remove('dragging');
         rotState.active = false;
+        rotState.moved = false;
         rotState.board = null;
     }
 
@@ -1275,7 +1308,7 @@
 
     /* ===== Tic Tac Toe ===== */
     function handleCellClick(e) {
-        const index = parseInt(e.currentTarget.dataset.index);
+        const index = parseInt(e.currentTarget.dataset.index, 10);
         if (!gameActive || gameBoard[index] !== '') return;
         if (battleMode === 'aivsai') return;
         if (battleMode === 'pve' && currentPlayer !== PLAYER_X) return;
@@ -1323,7 +1356,7 @@
         if (!gameActive || bm === 'aivsai') return;
         if (bm === 'pve' && currentPlayer !== PLAYER_X) return;
 
-        const col = parseInt(e.currentTarget.dataset.col);
+        const col = parseInt(e.currentTarget.dataset.col, 10);
         const row = getC4NextOpenRow(col);
         if (row === -1) return;
 
@@ -1475,7 +1508,7 @@
 
     function lockC4Board(lock) {
         document.querySelectorAll('.c4-cell').forEach(cell => {
-            const col = parseInt(cell.dataset.col);
+            const col = parseInt(cell.dataset.col, 10);
             const row = getC4NextOpenRow(col);
             if (row !== -1) cell.classList.toggle('disabled', lock);
         });
@@ -1618,8 +1651,8 @@
         if (!gameActive || bm === 'aivsai') return;
         if (bm === 'pve' && currentPlayer !== PLAYER_X) return;
 
-        const row = parseInt(e.currentTarget.dataset.row);
-        const col = parseInt(e.currentTarget.dataset.col);
+        const row = parseInt(e.currentTarget.dataset.row, 10);
+        const col = parseInt(e.currentTarget.dataset.col, 10);
         const board = getActiveGmkBoard();
         if (board[row][col] !== '') return;
 
@@ -1960,7 +1993,7 @@
     /* ===== Shared Game Logic ===== */
     function lockBoard(lock) {
         cells.forEach(cell => {
-            const idx = parseInt(cell.dataset.index);
+            const idx = parseInt(cell.dataset.index, 10);
             if (gameBoard[idx] === '') cell.classList.toggle('disabled', lock);
         });
     }
