@@ -88,6 +88,7 @@ body.animations-off .gomoku-win-line { opacity: 1 !important; }
     transform: translate(-50%, -50%);
     pointer-events: none;
     animation: pulse-glow calc(6s * var(--anim-scale)) ease-in-out infinite;
+    z-index: 0;
 }
 
 @keyframes pulse-glow {
@@ -103,6 +104,7 @@ body.animations-off .gomoku-win-line { opacity: 1 !important; }
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    position: relative;
     z-index: 1;
     animation: fade-in-up calc(0.8s * var(--anim-scale)) ease-out both;
 }
@@ -150,19 +152,12 @@ body.animations-off .gomoku-win-line { opacity: 1 !important; }
 }
 
 .battle-switch {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition: max-height 0.35s ease, opacity 0.3s ease, margin 0.35s ease, padding 0.35s ease;
-    margin: 0;
-    padding: 0;
+    display: none;
 }
 
 .battle-switch.show {
-    max-height: 60px;
-    opacity: 1;
+    display: flex;
     margin-top: -0.25rem;
-    padding: 4px;
     animation: fade-in-up calc(0.4s * var(--anim-scale)) ease-out both;
 }
 
@@ -476,7 +471,7 @@ body.animations-off .gomoku-win-line { opacity: 1 !important; }
     position: relative;
     display: none;
     width: 100%;
-    max-height: 340px;
+    max-width: 340px;
     aspect-ratio: 1 / 1;
     background: var(--surface);
     border-radius: 16px;
@@ -589,7 +584,7 @@ body.animations-off .gomoku-win-line { opacity: 1 !important; }
     gap: 0.5rem;
     font-size: 1rem;
     font-weight: 600;
-    transition: all 0.25s ease;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 .btn-restart {
@@ -654,6 +649,8 @@ body.animations-off .gomoku-win-line { opacity: 1 !important; }
     transition: opacity 0.3s ease;
     z-index: 100;
 }
+
+.modal { z-index: 120; }
 
 .modal.show, .drawer-overlay.show {
     opacity: 1;
@@ -1080,5 +1077,5 @@ body.animations-off .gomoku-win-line { opacity: 1 !important; }
     .mode-btn,
     .battle-btn { font-size: 0.58rem; padding: 0.4rem 0.05rem; }
     .gomoku-piece { width: 60%; height: 60%; }
-    .gomoku-board { max-height: 300px; }
+    .gomoku-board { max-width: 300px; }
 }
