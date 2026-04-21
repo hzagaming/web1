@@ -79,6 +79,14 @@ body.animations-off .win-line,
 body.animations-off .c4-win-line,
 body.animations-off .gomoku-win-line { opacity: 1 !important; }
 
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
 /* ===== Background Glow ===== */
 .bg-glow {
     position: absolute;
@@ -587,6 +595,11 @@ body.animations-off .gomoku-win-line { opacity: 1 !important; }
     font-size: 1rem;
     font-weight: 600;
     transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
 }
 
 .btn-restart {

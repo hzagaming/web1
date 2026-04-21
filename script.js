@@ -156,6 +156,7 @@
             'modal-you-win': { zh:'不可思议，你击败了 AI！', en:'Incredible, you beat the AI!', ja:'AI に勝利！', ko:'AI를 이겼습니다!', fr:'Incroyable, vous battez l\'IA !', de:'Unglaublich, du besiegst die KI!', es:'¡Increíble, venciste a la IA!', ru:'Невероятно, вы победили ИИ!', it:'Incredibile, hai battuto l\'AI!', pt:'Incrível, você venceu a IA!' },
             'modal-ai-wins': { zh:'别气馁，再来一局！', en:'Don\'t give up, try again!', ja:'諦めずにもう一度！', ko:'포기 말고 다시!', fr:'Ne abandonne pas, réessaie !', de:'Gib nicht auf, versuch es nochmal!', es:'¡No te rindas, inténtalo de nuevo!', ru:'Не сдавайся, попробуй ещё!', it:'Non mollare, riprova!', pt:'Não desista, tente de novo!' },
             'modal-draw-pvp': { zh:'旗鼓相当的对手！', en:'Well matched!', ja:'互角の戦い！', ko:'실력이 비슷합니다!', fr:'Bien matchés !', de:'Gut gematcht!', es:'¡Bien emparejados!', ru:'Равная игра!', it:'Ben abbinati!', pt:'Bem equilibrado!' },
+            'modal-draw-pve': { zh:'势均力敌，再战一局！', en:'A close game — try again!', ja:'接戦でした、もう一度！', ko:'박빙이었습니다, 다시!', fr:'Match serré — réessaie !', de:'Ein knappes Spiel — nochmal!', es:'Partido reñido — ¡inténtalo de nuevo!', ru:'Близкая игра — попробуй ещё!', it:'Partita equilibrata — riprova!', pt:'Jogo equilibrado — tente de novo!' },
             'modal-draw-aivsai': { zh:'两大 AI 势均力敌', en:'Two perfect AIs clash', ja:'AI 同士の激突', ko:'두 AI의 대결', fr:'Deux IAs parfaites s\'affrontent', de:'Zwei perfekte KIs kollidieren', es:'Dos IAs perfectas chocan', ru:'Столкновение двух ИИ', it:'Scontro tra due AI perfette', pt:'Dois IAs perfeitos colidem' },
             'settings-title': { zh:'设置', en:'Settings', ja:'設定', ko:'설정', fr:'Paramètres', de:'Einstellungen', es:'Ajustes', ru:'Настройки', it:'Impostazioni', pt:'Configurações' },
             'setting-language': { zh:'语言', en:'Language', ja:'言語', ko:'언어', fr:'Langue', de:'Sprache', es:'Idioma', ru:'Язык', it:'Lingua', pt:'Idioma' },
@@ -383,7 +384,7 @@
             if (tr) el.setAttribute('aria-label', tr);
         });
         updateScoreLabels();
-        if (gameActive) updateStatus(getTurnText(), currentPlayer === PLAYER_X ? 'x' : 'o');
+        updateStatus(getTurnText(), currentPlayer === PLAYER_X ? 'x' : 'o');
         const bm = getEffectiveBattleMode();
         if (currentMode === 'pve') subtitle.textContent = t('subtitle-pve');
         else if (currentMode === 'pvp') subtitle.textContent = t('subtitle-pvp');
@@ -460,13 +461,28 @@
         volumeSlider.addEventListener('input', e => { settings.soundVolume = parseInt(e.target.value); volumeValue.textContent = settings.soundVolume + '%'; });
         testSoundBtn.addEventListener('click', () => { initAudio(); playMoveSound(PLAYER_X); });
 
-        customWinLenInput.addEventListener('change', e => { const v = parseInt(e.target.value); customConfig.winLen = clamp(isNaN(v) ? 5 : v, 3, 20); customWinLenInput.value = customConfig.winLen; if (currentMode === 'custom') { subtitle.textContent = getCustomSubtitle(); resetGame(); } });
-        customBoardWInput.addEventListener('change', e => { const v = parseInt(e.target.value); customConfig.w = clamp(isNaN(v) ? 15 : v, 3, 20); customBoardWInput.value = customConfig.w; if (currentMode === 'custom') { subtitle.textContent = getCustomSubtitle(); resetGame(); } });
-        customBoardHInput.addEventListener('change', e => { const v = parseInt(e.target.value); customConfig.h = clamp(isNaN(v) ? 15 : v, 3, 20); customBoardHInput.value = customConfig.h; if (currentMode === 'custom') { subtitle.textContent = getCustomSubtitle(); resetGame(); } });
+        function validateCustomConfig() {
+            const minDim = Math.min(customConfig.w, customConfig.h);
+            if (customConfig.winLen > minDim) {
+                customConfig.winLen = minDim;
+                customWinLenInput.value = minDim;
+            }
+        }
+        customWinLenInput.addEventListener('change', e => { const v = parseInt(e.target.value); customConfig.winLen = clamp(isNaN(v) ? 5 : v, 3, 20); validateCustomConfig(); if (currentMode === 'custom') { subtitle.textContent = getCustomSubtitle(); resetGame(); } });
+        customBoardWInput.addEventListener('change', e => { const v = parseInt(e.target.value); customConfig.w = clamp(isNaN(v) ? 15 : v, 3, 20); validateCustomConfig(); customBoardWInput.value = customConfig.w; if (currentMode === 'custom') { subtitle.textContent = getCustomSubtitle(); resetGame(); } });
+        customBoardHInput.addEventListener('change', e => { const v = parseInt(e.target.value); customConfig.h = clamp(isNaN(v) ? 15 : v, 3, 20); validateCustomConfig(); customBoardHInput.value = customConfig.h; if (currentMode === 'custom') { subtitle.textContent = getCustomSubtitle(); resetGame(); } });
 
         changelogBtn.addEventListener('click', openChangelog);
         changelogClose.addEventListener('click', closeChangelog);
         changelogModal.addEventListener('click', e => { if (e.target === changelogModal) closeChangelog(); });
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                if (drawer.classList.contains('show')) { closeDrawer(); }
+                else if (changelogModal.classList.contains('show')) { closeChangelog(); }
+                else if (modal.classList.contains('show')) { hideModal(); }
+            }
+        });
 
         applySettingsUI();
         applyI18n();
@@ -609,6 +625,7 @@
         else if (size === '7') { customConfig = { w: 7, h: 7, winLen: 4 }; }
         else if (size === '10') { customConfig = { w: 10, h: 10, winLen: 5 }; }
         else if (size === '15') { customConfig = { w: 15, h: 15, winLen: 5 }; }
+        validateCustomConfig();
         applySettingsUI();
         customWinLenInput.value = customConfig.winLen;
         customBoardWInput.value = customConfig.w;
@@ -884,7 +901,7 @@
         if (currentMode === mode) return;
         clearTimeout(aiTimer); aiTimer = null;
         currentMode = mode;
-        modeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
+        modeBtns.forEach(btn => { btn.classList.toggle('active', btn.dataset.mode === mode); btn.setAttribute('aria-pressed', btn.dataset.mode === mode); });
         const bm2 = getEffectiveBattleMode();
         if (currentMode === 'pve') subtitle.textContent = t('subtitle-pve');
         else if (currentMode === 'pvp') subtitle.textContent = t('subtitle-pvp');
@@ -913,7 +930,7 @@
         if (battleMode === mode) return;
         clearTimeout(aiTimer); aiTimer = null;
         battleMode = mode;
-        battleBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.battle === mode));
+        battleBtns.forEach(btn => { btn.classList.toggle('active', btn.dataset.battle === mode); btn.setAttribute('aria-pressed', btn.dataset.battle === mode); });
         const bm = getEffectiveBattleMode();
         if (currentMode === 'connect4') subtitle.textContent = bm === 'pvp' ? t('subtitle-connect4') + ' — ' + t('subtitle-pvp') : bm === 'aivsai' ? t('subtitle-connect4') + ' — ' + t('subtitle-aivsai') : t('subtitle-connect4');
         else if (currentMode === 'gomoku') subtitle.textContent = bm === 'pvp' ? t('subtitle-gomoku') + ' — ' + t('subtitle-pvp') : bm === 'aivsai' ? t('subtitle-gomoku') + ' — ' + t('subtitle-aivsai') : t('subtitle-gomoku');
@@ -984,7 +1001,7 @@
     }
 
     function makeMove(index, player) {
-        if (index < 0 || index > 8 || gameBoard[index] !== '') return;
+        if (!gameActive || index < 0 || index > 8 || gameBoard[index] !== '') return;
         gameBoard[index] = player;
         cells[index].innerHTML = player === PLAYER_X ? xSvg : oSvg;
         cells[index].classList.add('disabled');
@@ -1037,7 +1054,7 @@
     }
 
     function makeC4Move(row, col, player) {
-        if (row < 0 || row >= C4_ROWS || col < 0 || col >= C4_COLS || c4Board[row][col] !== '') return;
+        if (!gameActive || row < 0 || row >= C4_ROWS || col < 0 || col >= C4_COLS || c4Board[row][col] !== '') return;
         c4Board[row][col] = player;
         const cell = c4CellsContainer.children[row * C4_COLS + col];
         const piece = document.createElement('div');
@@ -1090,7 +1107,7 @@
             scores.draw++;
             animateScore(scoreDrawEl);
             playDrawSound();
-            const msg = bm === 'aivsai' ? t('modal-draw-aivsai') : t('modal-draw-pvp');
+            const msg = bm === 'aivsai' ? t('modal-draw-aivsai') : bm === 'pve' ? t('modal-draw-pve') : t('modal-draw-pvp');
             showModal('🤝', t('status-draw'), msg);
             updateStatus(t('status-draw'), null);
         } else {
@@ -1309,6 +1326,7 @@
     }
 
     function makeGmkMove(row, col, player) {
+        if (!gameActive) return;
         const board = getActiveGmkBoard();
         const cfg = getActiveGmkConfig();
         if (row < 0 || row >= cfg.h || col < 0 || col >= cfg.w || board[row][col] !== '') return;
@@ -1374,7 +1392,7 @@
             scores.draw++;
             animateScore(scoreDrawEl);
             playDrawSound();
-            const msg = bm === 'aivsai' ? t('modal-draw-aivsai') : t('modal-draw-pvp');
+            const msg = bm === 'aivsai' ? t('modal-draw-aivsai') : bm === 'pve' ? t('modal-draw-pve') : t('modal-draw-pvp');
             showModal('🤝', t('status-draw'), msg);
             updateStatus(t('status-draw'), null);
         } else {
@@ -1527,10 +1545,12 @@
                     if (window.length === cfg.winLen) {
                         const aiCount = window.filter(v => v === aiPlayer).length;
                         const humanCount = window.filter(v => v === humanPlayer).length;
-                        if (aiCount === cfg.winLen) score += 100000;
-                        else if (humanCount === cfg.winLen) score -= 100000;
-                        else if (aiCount > 0 && humanCount === 0) score += Math.pow(10, aiCount);
-                        else if (humanCount > 0 && aiCount === 0) score -= Math.pow(10, humanCount);
+                        const SAFE_MAX = Math.min(cfg.winLen - 1, 15);
+                        const WIN_BONUS = Math.pow(5, SAFE_MAX) * 10 + 1;
+                        if (aiCount === cfg.winLen) score += WIN_BONUS;
+                        else if (humanCount === cfg.winLen) score -= WIN_BONUS;
+                        else if (aiCount > 0 && humanCount === 0) score += Math.pow(5, Math.min(aiCount, SAFE_MAX));
+                        else if (humanCount > 0 && aiCount === 0) score -= Math.pow(5, Math.min(humanCount, SAFE_MAX));
                     }
                 }
             }
@@ -1571,7 +1591,7 @@
             scores.draw++;
             animateScore(scoreDrawEl);
             playDrawSound();
-            const msg = currentMode === 'aivsai' ? t('modal-draw-aivsai') : t('modal-draw-pvp');
+            const msg = currentMode === 'aivsai' ? t('modal-draw-aivsai') : currentMode === 'pve' ? t('modal-draw-pve') : t('modal-draw-pvp');
             showModal('🤝', t('status-draw'), msg);
             updateStatus(t('status-draw'), null);
         } else {
@@ -1609,7 +1629,7 @@
 
     function animateScore(el) {
         el.classList.add('pop');
-        el.textContent = parseInt(el.textContent) + 1;
+        el.textContent = parseInt(el.textContent, 10) + 1;
         setTimeout(() => el.classList.remove('pop'), 200);
     }
 
@@ -1633,17 +1653,7 @@
             gomokuBoard.style.display = 'none';
             const bm = getEffectiveBattleMode();
             if (bm === 'pve') {
-                updateStatus(t('status-ai-thinking'), 'o');
-                lockC4Board(true);
-                const delay = settings.animations ? 600 : 80;
-                aiTimer = setTimeout(() => {
-                    if (!gameActive) return;
-                    const aiCol = getC4AiMove(PLAYER_O);
-                    if (aiCol === -1) { endC4Game(true); return; }
-                    const aiRow = getC4NextOpenRow(aiCol);
-                    makeC4Move(aiRow, aiCol, PLAYER_O);
-                    if (gameActive) lockC4Board(false);
-                }, delay);
+                updateStatus(getTurnText(), 'x');
             } else if (bm === 'aivsai') {
                 startC4AiVsAi();
             } else {
@@ -1670,16 +1680,7 @@
             connect4Board.style.display = 'none';
             const bm = getEffectiveBattleMode();
             if (bm === 'pve') {
-                updateStatus(t('status-ai-thinking'), 'o');
-                lockGmkBoard(true);
-                const delay = settings.animations ? 800 : 100;
-                aiTimer = setTimeout(() => {
-                    if (!gameActive) return;
-                    const aiMove = getGmkAiMove(PLAYER_O);
-                    if (!aiMove) { endGmkGame(true); return; }
-                    makeGmkMove(aiMove.r, aiMove.c, PLAYER_O);
-                    if (gameActive) lockGmkBoard(false);
-                }, delay);
+                updateStatus(getTurnText(), 'x');
             } else if (bm === 'aivsai') {
                 startGmkAiVsAi();
             } else {
@@ -1882,7 +1883,7 @@
             if (gameActive) {
                 startGmkAiVsAi();
             } else {
-                const nextDelay = settings.animations ? 1500 : 400;
+                const nextDelay = settings.animations ? 1200 : 300;
                 aiTimer = setTimeout(() => { if (!gameActive && isGmkMode() && getEffectiveBattleMode() === 'aivsai') resetGame(); }, nextDelay);
             }
         }, delay);

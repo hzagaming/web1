@@ -23,18 +23,18 @@
         </header>
 
         <div class="mode-switch" id="mode-switch">
-            <button class="mode-btn active" data-mode="pve" data-i18n="mode-pve">人机</button>
-            <button class="mode-btn" data-mode="pvp" data-i18n="mode-pvp">双人</button>
-            <button class="mode-btn" data-mode="aivsai" data-i18n="mode-aivsai">AI 对战</button>
-            <button class="mode-btn" data-mode="connect4" data-i18n="mode-connect4">四子棋</button>
-            <button class="mode-btn" data-mode="gomoku" data-i18n="mode-gomoku">五子棋</button>
-            <button class="mode-btn" data-mode="custom" data-i18n="mode-custom">自定义</button>
+            <button class="mode-btn active" data-mode="pve" data-i18n="mode-pve" aria-pressed="true">人机</button>
+            <button class="mode-btn" data-mode="pvp" data-i18n="mode-pvp" aria-pressed="false">双人</button>
+            <button class="mode-btn" data-mode="aivsai" data-i18n="mode-aivsai" aria-pressed="false">AI 对战</button>
+            <button class="mode-btn" data-mode="connect4" data-i18n="mode-connect4" aria-pressed="false">四子棋</button>
+            <button class="mode-btn" data-mode="gomoku" data-i18n="mode-gomoku" aria-pressed="false">五子棋</button>
+            <button class="mode-btn" data-mode="custom" data-i18n="mode-custom" aria-pressed="false">自定义</button>
         </div>
 
         <div class="battle-switch" id="battle-switch">
-            <button class="battle-btn active" data-battle="pve" data-i18n="mode-pve">人机</button>
-            <button class="battle-btn" data-battle="pvp" data-i18n="mode-pvp">双人</button>
-            <button class="battle-btn" data-battle="aivsai" data-i18n="mode-aivsai">AI 对战</button>
+            <button class="battle-btn active" data-battle="pve" data-i18n="mode-pve" aria-pressed="true">人机</button>
+            <button class="battle-btn" data-battle="pvp" data-i18n="mode-pvp" aria-pressed="false">双人</button>
+            <button class="battle-btn" data-battle="aivsai" data-i18n="mode-aivsai" aria-pressed="false">AI 对战</button>
         </div>
 
         <div class="scoreboard" id="scoreboard">
@@ -52,7 +52,7 @@
             </div>
         </div>
 
-        <div class="status-bar">
+        <div class="status-bar" aria-live="polite" aria-atomic="true">
             <span id="status-text" data-i18n="status-your-turn">你的回合</span>
         </div>
 
@@ -112,7 +112,7 @@
     </main>
 
     <!-- Result Modal -->
-    <div class="modal" id="result-modal">
+    <div class="modal" id="result-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="modal-content">
             <div class="modal-icon" id="modal-icon"></div>
             <h2 id="modal-title" data-i18n="modal-game-over">游戏结束</h2>
@@ -123,7 +123,7 @@
 
     <!-- Settings Drawer -->
     <div class="drawer-overlay" id="drawer-overlay"></div>
-    <aside class="settings-drawer" id="settings-drawer">
+    <aside class="settings-drawer" id="settings-drawer" role="dialog" aria-modal="true" data-i18n-aria="settings-title" aria-label="Settings">
         <div class="drawer-header">
             <h2 data-i18n="settings-title">设置</h2>
             <button class="drawer-close" id="drawer-close" data-i18n-aria="aria-close" aria-label="Close">
@@ -299,10 +299,10 @@
     </aside>
 
     <!-- Changelog Modal -->
-    <div class="modal" id="changelog-modal">
+    <div class="modal" id="changelog-modal" role="dialog" aria-modal="true" aria-labelledby="changelog-title">
         <div class="modal-content changelog-content">
             <div class="changelog-header">
-                <h2 data-i18n="changelog-title">更新公告</h2>
+                <h2 id="changelog-title" data-i18n="changelog-title">更新公告</h2>
                 <button class="drawer-close" id="changelog-close" data-i18n-aria="aria-close" aria-label="Close">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
