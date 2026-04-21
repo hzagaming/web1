@@ -202,6 +202,7 @@
             'diff-medium': { zh:'中等', en:'Medium', ja:'普通', ko:'보통', fr:'Moyen', de:'Mittel', es:'Medio', ru:'Средне', it:'Medio', pt:'Médio' },
             'diff-hard': { zh:'困难', en:'Hard', ja:'難しい', ko:'어려움', fr:'Difficile', de:'Schwer', es:'Difícil', ru:'Сложно', it:'Difficile', pt:'Difícil' },
             'changelog-title': { zh:'更新公告', en:'Changelog', ja:'更新履歴', ko:'업데이트 공지', fr:'Mises à jour', de:'Änderungen', es:'Actualizaciones', ru:'Обновления', it:'Aggiornamenti', pt:'Atualizações' },
+            'app-title': { zh:'井字棋', en:'Tic Tac Toe', ja:'三目並べ', ko:'틱택토', fr:'Morpion', de:'Tic-Tac-Toe', es:'Tres en raya', ru:'Крестики-нолики', it:'Tris', pt:'Jogo da velha' },
             'aria-settings': { zh:'设置', en:'Settings', ja:'設定', ko:'설정', fr:'Paramètres', de:'Einstellungen', es:'Ajustes', ru:'Настройки', it:'Impostazioni', pt:'Configurações' },
             'aria-changelog': { zh:'更新公告', en:'Changelog', ja:'更新履歴', ko:'업데이트 공지', fr:'Journal', de:'Änderungen', es:'Actualizaciones', ru:'Обновления', it:'Aggiornamenti', pt:'Atualizações' },
             'aria-close': { zh:'关闭', en:'Close', ja:'閉じる', ko:'닫기', fr:'Fermer', de:'Schließen', es:'Cerrar', ru:'Закрыть', it:'Chiudi', pt:'Fechar' },
@@ -370,6 +371,7 @@
 
     function applyI18n() {
         document.documentElement.lang = settings.lang === 'zh' ? 'zh-CN' : settings.lang;
+        document.title = t('app-title');
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             const tr = t(key);
@@ -517,7 +519,7 @@
     }
 
     /* ===== Settings Logic ===== */
-    function openDrawer() { drawer.classList.add('show'); drawerOverlay.classList.add('show'); }
+    function openDrawer() { closeChangelog(); drawer.classList.add('show'); drawerOverlay.classList.add('show'); }
     function closeDrawer() { drawer.classList.remove('show'); drawerOverlay.classList.remove('show'); }
 
     function setLang(lang) {
@@ -695,7 +697,10 @@
 
     /* ===== Audio ===== */
     function initAudio() {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) audioCtx = new AudioContext();
+        }
     }
 
     function playOsc(freq, type, duration, vol) {
@@ -1109,16 +1114,33 @@
         }
     }
 
+    function getWinLineEndpoints(winCells) {
+        if (!winCells || winCells.length < 2) return [winCells[0], winCells[0]];
+        let maxDistSq = -1, a = winCells[0], b = winCells[1];
+        for (let i = 0; i < winCells.length; i++) {
+            for (let j = i + 1; j < winCells.length; j++) {
+                const [r1, c1] = winCells[i];
+                const [r2, c2] = winCells[j];
+                const distSq = (r1 - r2) ** 2 + (c1 - c2) ** 2;
+                if (distSq > maxDistSq) {
+                    maxDistSq = distSq;
+                    a = winCells[i];
+                    b = winCells[j];
+                }
+            }
+        }
+        return [a, b];
+    }
+
     function drawC4WinLine(winCells, winner) {
         if (!winCells || winCells.length < 2) return;
-        const [r1, c1] = winCells[0];
-        const [r2, c2] = winCells[winCells.length - 1];
+        const [[r1, c1], [r2, c2]] = getWinLineEndpoints(winCells);
         const cell1 = c4CellsContainer.children[r1 * C4_COLS + c1];
         const cell2 = c4CellsContainer.children[r2 * C4_COLS + c2];
         const rect1 = cell1.getBoundingClientRect();
         const rect2 = cell2.getBoundingClientRect();
         const boardRect = connect4Board.getBoundingClientRect();
-        const padding = 10;
+        const padding = 6;
         const innerW = boardRect.width - padding * 2;
         const innerH = boardRect.height - padding * 2;
         const scaleX = 700 / innerW;
@@ -1379,8 +1401,7 @@
     function drawGmkWinLine(winCells, winner) {
         if (!winCells || winCells.length < 2) return;
         const cfg = getActiveGmkConfig();
-        const [r1, c1] = winCells[0];
-        const [r2, c2] = winCells[winCells.length - 1];
+        const [[r1, c1], [r2, c2]] = getWinLineEndpoints(winCells);
         const cell1 = gomokuCellsContainer.children[r1 * cfg.w + c1];
         const cell2 = gomokuCellsContainer.children[r2 * cfg.w + c2];
         const rect1 = cell1.getBoundingClientRect();
@@ -1750,7 +1771,7 @@
             if (lose) return i;
         }
         const empties = board.map((v, i) => v === '' ? i : null).filter(v => v !== null);
-        return empties[Math.floor(Math.random() * empties.length)];
+        return empties.length > 0 ? empties[Math.floor(Math.random() * empties.length)] : -1;
     }
 
     function getBestMoveGeneric(board, aiPlayer) {
@@ -1868,7 +1889,7 @@
     }
 
     /* ===== Changelog ===== */
-    function openChangelog() { renderChangelog(); changelogModal.classList.add('show'); }
+    function openChangelog() { closeDrawer(); renderChangelog(); changelogModal.classList.add('show'); }
     function closeChangelog() { changelogModal.classList.remove('show'); }
 
     function renderChangelog() {
