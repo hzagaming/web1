@@ -153,14 +153,16 @@ body.animations-off .gomoku-win-line { opacity: 1 !important; }
     max-height: 0;
     opacity: 0;
     overflow: hidden;
-    transition: max-height 0.35s ease, opacity 0.3s ease, margin 0.35s ease;
+    transition: max-height 0.35s ease, opacity 0.3s ease, margin 0.35s ease, padding 0.35s ease;
     margin: 0;
+    padding: 0;
 }
 
 .battle-switch.show {
     max-height: 60px;
     opacity: 1;
     margin-top: -0.25rem;
+    padding: 4px;
     animation: fade-in-up calc(0.4s * var(--anim-scale)) ease-out both;
 }
 

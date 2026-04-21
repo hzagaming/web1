@@ -357,7 +357,7 @@
             if (tr) el.textContent = tr;
         });
         updateScoreLabels();
-        updateStatus(getTurnText(), currentPlayer === PLAYER_X ? 'x' : 'o');
+        if (gameActive) updateStatus(getTurnText(), currentPlayer === PLAYER_X ? 'x' : 'o');
         const bm = getEffectiveBattleMode();
         if (currentMode === 'pve') subtitle.textContent = t('subtitle-pve');
         else if (currentMode === 'pvp') subtitle.textContent = t('subtitle-pvp');
@@ -953,6 +953,7 @@
     }
 
     function makeMove(index, player) {
+        if (index < 0 || index > 8 || gameBoard[index] !== '') return;
         gameBoard[index] = player;
         cells[index].innerHTML = player === PLAYER_X ? xSvg : oSvg;
         cells[index].classList.add('disabled');
@@ -1005,6 +1006,7 @@
     }
 
     function makeC4Move(row, col, player) {
+        if (row < 0 || row >= C4_ROWS || col < 0 || col >= C4_COLS || c4Board[row][col] !== '') return;
         c4Board[row][col] = player;
         const cell = c4CellsContainer.children[row * C4_COLS + col];
         const piece = document.createElement('div');
@@ -1259,6 +1261,7 @@
     function makeGmkMove(row, col, player) {
         const board = getActiveGmkBoard();
         const cfg = getActiveGmkConfig();
+        if (row < 0 || row >= cfg.h || col < 0 || col >= cfg.w || board[row][col] !== '') return;
         board[row][col] = player;
         const cell = gomokuCellsContainer.children[row * cfg.w + col];
         const piece = document.createElement('div');
@@ -1579,9 +1582,9 @@
             connect4Board.style.display = 'block';
             boardEl.style.display = 'none';
             gomokuBoard.style.display = 'none';
-            updateStatus(getTurnText(), 'x');
             const bm = getEffectiveBattleMode();
             if (bm === 'pve') {
+                updateStatus(t('status-ai-thinking'), 'o');
                 lockC4Board(true);
                 const delay = settings.animations ? 600 : 80;
                 aiTimer = setTimeout(() => {
@@ -1615,9 +1618,9 @@
             gomokuBoard.style.display = 'block';
             boardEl.style.display = 'none';
             connect4Board.style.display = 'none';
-            updateStatus(getTurnText(), 'x');
             const bm = getEffectiveBattleMode();
             if (bm === 'pve') {
+                updateStatus(t('status-ai-thinking'), 'o');
                 lockGmkBoard(true);
                 const delay = settings.animations ? 800 : 100;
                 aiTimer = setTimeout(() => {
@@ -1767,6 +1770,7 @@
         aiTimer = setTimeout(() => {
             if (!gameActive || currentMode !== 'aivsai') return;
             const move = getAiMove(gameBoard, currentPlayer);
+            if (move < 0 || move > 8) { endGame(true); return; }
             makeMove(move, currentPlayer);
             if (gameActive) {
                 startAiVsAi();
