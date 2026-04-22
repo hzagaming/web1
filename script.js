@@ -265,6 +265,22 @@
     /* ===== Changelog Data ===== */
     const changelogData = [
         {
+            version: '0.5.5',
+            date: { zh:'2026-04-22', en:'Apr 22, 2026', ja:'2026年4月22日', ko:'2026년 4월 22일', fr:'22 avr. 2026', de:'22. Apr. 2026', es:'22 abr. 2026', ru:'22 апр. 2026', it:'22 apr. 2026', pt:'22 de abr. de 2026' },
+            items: {
+                zh: ['Pointer Events 路径补充 window.blur 监听，防止切出浏览器后 3D 拖拽状态卡死'],
+                en: ['Pointer Events path now listens to window.blur to prevent stuck 3D drag state when switching away from browser'],
+                ja: ['Pointer Events パスに window.blur リスナーを追加し、ブラウザ切り替え後の 3D ドラッグ状態の固着を防止'],
+                ko: ['Pointer Events 경로에 window.blur 리스너 추가, 브라우저 전환 후 3D 드래그 상태 고정 방지'],
+                fr: ['Chemin Pointer Events écoute désormais window.blur pour éviter le blocage du drag 3D en quittant le navigateur'],
+                de: ['Pointer Events-Pfad hört jetzt auf window.blur, um hängenden 3D-Drag beim Verlassen des Browsers zu verhindern'],
+                es: ['Ruta Pointer Events ahora escucha window.blur para evitar bloqueo de arrastre 3D al cambiar de navegador'],
+                ru: ['Путь Pointer Events теперь слушает window.blur для предотвращения зависшего состояния 3D-перетаскивания при переключении из браузера'],
+                it: ['Percorso Pointer Events ora ascolta window.blur per prevenire il blocco del trascinamento 3D quando si esce dal browser'],
+                pt: ['Caminho Pointer Events agora escuta window.blur para evitar travamento do arrasto 3D ao sair do navegador'],
+            }
+        },
+        {
             version: '0.5.3',
             date: { zh:'2026-04-20', en:'Apr 20, 2026', ja:'2026年4月20日', ko:'2026년 4월 20일', fr:'20 avr. 2026', de:'20. Apr. 2026', es:'20 abr. 2026', ru:'20 апр. 2026', it:'20 apr. 2026', pt:'20 de abr. de 2026' },
             items: {
@@ -908,7 +924,9 @@
             board.addEventListener('touchstart', e => onDragStart(e, board), { passive: false });
         }
     });
-    if (!hasPointerEvents) {
+    if (hasPointerEvents) {
+        window.addEventListener('blur', onDragEnd);
+    } else {
         document.addEventListener('mousemove', onDragMove);
         document.addEventListener('touchmove', onDragMove, { passive: false });
         document.addEventListener('mouseup', onDragEnd);
