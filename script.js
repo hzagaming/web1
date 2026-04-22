@@ -210,6 +210,11 @@
             'diff-medium': { zh:'中等', en:'Medium', ja:'普通', ko:'보통', fr:'Moyen', de:'Mittel', es:'Medio', ru:'Средне', it:'Medio', pt:'Médio' },
             'diff-hard': { zh:'困难', en:'Hard', ja:'難しい', ko:'어려움', fr:'Difficile', de:'Schwer', es:'Difícil', ru:'Сложно', it:'Difficile', pt:'Difícil' },
             'changelog-title': { zh:'更新公告', en:'Changelog', ja:'更新履歴', ko:'업데이트 공지', fr:'Mises à jour', de:'Änderungen', es:'Actualizaciones', ru:'Обновления', it:'Aggiornamenti', pt:'Atualizações' },
+            'setting-about': { zh:'关于', en:'About', ja:'について', ko:'정보', fr:'À propos', de:'Über', es:'Acerca de', ru:'О приложении', it:'Informazioni', pt:'Sobre' },
+            'about-repo': { zh:'仓库地址', en:'Repository', ja:'リポジトリ', ko:'저장소', fr:'Dépôt', de:'Repository', es:'Repositorio', ru:'Репозиторий', it:'Repository', pt:'Repositório' },
+            'about-github': { zh:'GitHub 主页', en:'GitHub Profile', ja:'GitHub プロフィール', ko:'GitHub 프로필', fr:'Profil GitHub', de:'GitHub-Profil', es:'Perfil GitHub', ru:'Профиль GitHub', it:'Profilo GitHub', pt:'Perfil GitHub' },
+            'about-haazar': { zh:'haazargames.com', en:'haazargames.com', ja:'haazargames.com', ko:'haazargames.com', fr:'haazargames.com', de:'haazargames.com', es:'haazargames.com', ru:'haazargames.com', it:'haazargames.com', pt:'haazargames.com' },
+            'btn-back-to-lobby': { zh:'回到大厅', en:'Back to Lobby', ja:'ロビーに戻る', ko:'로비로 돌아가기', fr:'Retour au lobby', de:'Zurück zur Lobby', es:'Volver al lobby', ru:'Вернуться в лобби', it:'Torna alla lobby', pt:'Voltar ao lobby' },
             'app-title': { zh:'井字棋', en:'Tic Tac Toe', ja:'三目並べ', ko:'틱택토', fr:'Morpion', de:'Tic-Tac-Toe', es:'Tres en raya', ru:'Крестики-нолики', it:'Tris', pt:'Jogo da velha' },
             'aria-settings': { zh:'设置', en:'Settings', ja:'設定', ko:'설정', fr:'Paramètres', de:'Einstellungen', es:'Ajustes', ru:'Настройки', it:'Impostazioni', pt:'Configurações' },
             'aria-changelog': { zh:'更新公告', en:'Changelog', ja:'更新履歴', ko:'업데이트 공지', fr:'Journal', de:'Änderungen', es:'Actualizaciones', ru:'Обновления', it:'Aggiornamenti', pt:'Atualizações' },
@@ -259,6 +264,22 @@
 
     /* ===== Changelog Data ===== */
     const changelogData = [
+        {
+            version: '0.5.3',
+            date: { zh:'2026-04-20', en:'Apr 20, 2026', ja:'2026年4月20日', ko:'2026년 4월 20일', fr:'20 avr. 2026', de:'20. Apr. 2026', es:'20 abr. 2026', ru:'20 апр. 2026', it:'20 apr. 2026', pt:'20 de abr. de 2026' },
+            items: {
+                zh: ['修复 3D 棋盘转动视角：移除 transform transition 延迟，添加 touch-action 与 user-select 支持，JS 增加鼠标离窗检测', '设置面板新增「关于」区域：仓库地址 / GitHub 主页 / haazargames.com / 回到大厅'],
+                en: ['Fixed 3D board rotation: removed transform transition lag, added touch-action and user-select support, added mouse-out detection in JS', 'Settings drawer added "About" section: repo / GitHub profile / haazargames.com / back to lobby'],
+                ja: ['3Dボード回転を修正：transform transition 遅延を削除、touch-action と user-select 追加、JS にマウス離脱検出追加','設定に「About」エリア追加：リポジトリ / GitHub / haazargames.com / ロビーに戻る'],
+                ko: ['3D 보드 회전 수정: transform transition 지연 제거, touch-action 및 user-select 추가, JS 마우스 이탈 감지 추가','설정에 "About" 영역 추가: 저장소 / GitHub / haazargames.com / 로비로 돌아가기'],
+                fr: ['Correction rotation plateau 3D : suppression latence transition transform, ajout touch-action et user-select, détection souris hors fenêtre','Ajout section "À propos" : dépôt / profil GitHub / haazargames.com / retour lobby'],
+                de: ['3D-Brett-Rotation korrigiert: Transform-Transition-Verzögerung entfernt, touch-action und user-select hinzugefügt, Maus-aus-Fenster-Erkennung','"Über"-Bereich hinzugefügt: Repository / GitHub-Profil / haazargames.com / Zurück zur Lobby'],
+                es: ['Corregida rotación tablero 3D: eliminada latencia transition transform, añadido touch-action y user-select, detección ratón fuera de ventana','Sección "Acerca de" añadida: repositorio / perfil GitHub / haazargames.com / volver al lobby'],
+                ru: ['Исправлено вращение 3D-доски: убрана задержка transition transform, добавлены touch-action и user-select, обнаружение выхода мыши за окно','Добавлен раздел "О приложении": репозиторий / профиль GitHub / haazargames.com / вернуться в лобби'],
+                it: ['Corretto rotazione scacchiera 3D: rimosso ritardo transition transform, aggiunti touch-action e user-select, rilevamento uscita mouse','Aggiunta sezione "Informazioni": repository / profilo GitHub / haazargames.com / torna alla lobby'],
+                pt: ['Corrigida rotação tabuleiro 3D: removido atraso transition transform, adicionados touch-action e user-select, detecção saída do mouse','Seção "Sobre" adicionada: repositório / perfil GitHub / haazargames.com / voltar ao lobby'],
+            }
+        },
         {
             version: '0.5.2',
             date: { zh:'2026-04-20', en:'Apr 20, 2026', ja:'2026年4月20日', ko:'2026년 4월 20일', fr:'20 avr. 2026', de:'20. Apr. 2026', es:'20 abr. 2026', ru:'20 апр. 2026', it:'20 apr. 2026', pt:'20 de abr. de 2026' },
@@ -589,6 +610,9 @@
         changelogClose.addEventListener('click', closeChangelog);
         changelogModal.addEventListener('click', e => { if (e.target === changelogModal) closeChangelog(); });
 
+        const backToLobbyBtn = document.getElementById('back-to-lobby-btn');
+        if (backToLobbyBtn) backToLobbyBtn.addEventListener('click', () => { window.location.href = 'https://haazargames.com'; });
+
         window.addEventListener('resize', () => {
             if (!lastWinData) return;
             if (lastWinData.mode === 'ttt') {
@@ -840,6 +864,7 @@
 
     function onDragMove(e) {
         if (!rotState.active || !rotState.board) return;
+        if (e.type === 'mousemove' && e.buttons !== 1) { onDragEnd(); return; }
         const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
         const dx = clientX - rotState.startX;

@@ -277,12 +277,15 @@ body.animations-off .gomoku-win-line { opacity: 1 !important; }
     border-radius: 24px;
     padding: 12px;
     box-shadow: var(--shadow);
-    transition: background 0.35s ease, transform 0.6s ease;
+    transition: background 0.35s ease;
     transform-style: preserve-3d;
 }
 
 .board.is-3d {
     transform: perspective(900px) rotateX(var(--rot-x, 15deg)) rotateY(var(--rot-y, -5deg));
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .board.is-3d.dragging,
@@ -402,13 +405,16 @@ body.animations-off .gomoku-win-line { opacity: 1 !important; }
     border-radius: 24px;
     padding: 10px;
     box-shadow: var(--shadow);
-    transition: background 0.35s ease, transform 0.6s ease;
+    transition: background 0.35s ease;
     transform-style: preserve-3d;
     overflow: hidden;
 }
 
 .connect4-board.is-3d {
     transform: perspective(900px) rotateX(var(--rot-x, 12deg)) rotateY(var(--rot-y, -3deg));
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .connect4-board.show { display: block; }
@@ -507,13 +513,16 @@ body.animations-off .gomoku-win-line { opacity: 1 !important; }
     border-radius: 16px;
     padding: 6px;
     box-shadow: var(--shadow);
-    transition: background 0.35s ease, transform 0.6s ease;
+    transition: background 0.35s ease;
     transform-style: preserve-3d;
     overflow: hidden;
 }
 
 .gomoku-board.is-3d {
     transform: perspective(900px) rotateX(var(--rot-x, 10deg)) rotateY(var(--rot-y, -4deg));
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .gomoku-board.show { display: block; }
@@ -1104,6 +1113,45 @@ body.animations-off .gomoku-win-line { opacity: 1 !important; }
     left: 0.3rem;
     color: var(--accent);
     font-weight: 700;
+}
+
+.about-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.about-links a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    background: var(--surface-light);
+    transition: background 0.2s ease;
+}
+
+.about-links a:hover {
+    background: var(--surface-hover);
+}
+
+.btn-back-to-lobby {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.btn-back-to-lobby:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
 }
 
 /* ===== Responsive ===== */
