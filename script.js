@@ -265,35 +265,19 @@
     /* ===== Changelog Data ===== */
     const changelogData = [
         {
-            version: '0.5.3.1',
-            date: { zh:'2026-04-20', en:'Apr 20, 2026', ja:'2026年4月20日', ko:'2026년 4월 20일', fr:'20 avr. 2026', de:'20. Apr. 2026', es:'20 abr. 2026', ru:'20 апр. 2026', it:'20 apr. 2026', pt:'20 de abr. de 2026' },
-            items: {
-                zh: ['3D 拖拽修复：touchstart 添加 preventDefault 阻止浏览器拦截，改用 changedTouches 获取精确坐标，touchend 短按自动合成 click 保证下棋正常，新增 window blur 监听防止鼠标离窗后拖拽失控', '修复 lockC4Board 误清除已下棋 cell 的 disabled 状态，现在只操作最下方空位 cell', '统一 endGame 中 battleMode 获取方式，改用 getEffectiveBattleMode()'],
-                en: ['3D drag fix: touchstart preventDefault blocks browser interception, changedTouches for precise coords, touchend tap synthesizes click to keep playing, window blur listener prevents stuck drag', 'Fixed lockC4Board incorrectly clearing disabled on occupied cells, now only targets bottom open cell', 'Unified endGame battleMode access via getEffectiveBattleMode()'],
-                ja: ['3Dドラッグ修正：touchstart に preventDefault 追加、changedTouches で正確な座標取得、タップ時に click 自動合成、window blur でドラッグ異常防止','lockC4Board の occupied cell disabled 誤解除を修正','endGame の battleMode 取得を getEffectiveBattleMode() に統一'],
-                ko: ['3D 드래그 수정: touchstart preventDefault 추가, changedTouches 로 정확한 좌표, 탭 시 click 자동 합성, window blur 로 드래그 이상 방지','lockC4Board 의 occupied cell disabled 오해제 수정','endGame battleMode 접근을 getEffectiveBattleMode() 로 통일'],
-                fr: ['Correction glisser-déposer 3D : preventDefault sur touchstart, changedTouches pour coords précises, synthèse click sur tap, blur fenêtre pour éviter drag bloqué','Correction lockC4Board ne retire plus disabled sur cellules occupées','Uniformisation endGame battleMode via getEffectiveBattleMode()'],
-                de: ['3D-Ziehen korrigiert: touchstart preventDefault, changedTouches für exakte Koordinaten, Click-Synthese bei Tap, window blur für hängenden Drag','lockC4Board korrigiert: disabled nicht mehr auf besetzte Zellen entfernt','endGame battleMode auf getEffectiveBattleMode() vereinheitlicht'],
-                es: ['Arrastre 3D corregido: preventDefault en touchstart, changedTouches para coords precisas, síntesis click en tap, blur ventana para drag bloqueado','lockC4Board corregido: no limpia disabled en celdas ocupadas','endGame battleMode unificado con getEffectiveBattleMode()'],
-                ru: ['Исправлено 3D-перетаскивание: preventDefault в touchstart, changedTouches для точных координат, синтез click при тапе, window blur для зависшего перетаскивания','Исправлено lockC4Board: не снимает disabled с занятых ячеек','endGame battleMode унифицирован через getEffectiveBattleMode()'],
-                it: ['Trascinamento 3D corretto: preventDefault su touchstart, changedTouches per coordinate precise, sintesi click su tap, blur finestra per trascinamento bloccato','lockC4Board corretto: non rimuove disabled su celle occupate','endGame battleMode uniformato con getEffectiveBattleMode()'],
-                pt: ['Arrasto 3D corrigido: preventDefault no touchstart, changedTouches para coords precisas, síntese click no tap, blur janela para drag travado','lockC4Board corrigido: não limpa disabled em células ocupadas','endGame battleMode unificado com getEffectiveBattleMode()'],
-            }
-        },
-        {
             version: '0.5.3',
             date: { zh:'2026-04-20', en:'Apr 20, 2026', ja:'2026年4月20日', ko:'2026년 4월 20일', fr:'20 avr. 2026', de:'20. Apr. 2026', es:'20 abr. 2026', ru:'20 апр. 2026', it:'20 apr. 2026', pt:'20 de abr. de 2026' },
             items: {
-                zh: ['修复 3D 棋盘转动视角：移除 transform transition 延迟，添加 touch-action 与 user-select 支持，JS 增加鼠标离窗检测', '设置面板新增「关于」区域：仓库地址 / GitHub 主页 / haazargames.com / 回到大厅'],
-                en: ['Fixed 3D board rotation: removed transform transition lag, added touch-action and user-select support, added mouse-out detection in JS', 'Settings drawer added "About" section: repo / GitHub profile / haazargames.com / back to lobby'],
-                ja: ['3Dボード回転を修正：transform transition 遅延を削除、touch-action と user-select 追加、JS にマウス離脱検出追加','設定に「About」エリア追加：リポジトリ / GitHub / haazargames.com / ロビーに戻る'],
-                ko: ['3D 보드 회전 수정: transform transition 지연 제거, touch-action 및 user-select 추가, JS 마우스 이탈 감지 추가','설정에 "About" 영역 추가: 저장소 / GitHub / haazargames.com / 로비로 돌아가기'],
-                fr: ['Correction rotation plateau 3D : suppression latence transition transform, ajout touch-action et user-select, détection souris hors fenêtre','Ajout section "À propos" : dépôt / profil GitHub / haazargames.com / retour lobby'],
-                de: ['3D-Brett-Rotation korrigiert: Transform-Transition-Verzögerung entfernt, touch-action und user-select hinzugefügt, Maus-aus-Fenster-Erkennung','"Über"-Bereich hinzugefügt: Repository / GitHub-Profil / haazargames.com / Zurück zur Lobby'],
-                es: ['Corregida rotación tablero 3D: eliminada latencia transition transform, añadido touch-action y user-select, detección ratón fuera de ventana','Sección "Acerca de" añadida: repositorio / perfil GitHub / haazargames.com / volver al lobby'],
-                ru: ['Исправлено вращение 3D-доски: убрана задержка transition transform, добавлены touch-action и user-select, обнаружение выхода мыши за окно','Добавлен раздел "О приложении": репозиторий / профиль GitHub / haazargames.com / вернуться в лобби'],
-                it: ['Corretto rotazione scacchiera 3D: rimosso ritardo transition transform, aggiunti touch-action e user-select, rilevamento uscita mouse','Aggiunta sezione "Informazioni": repository / profilo GitHub / haazargames.com / torna alla lobby'],
-                pt: ['Corrigida rotação tabuleiro 3D: removido atraso transition transform, adicionados touch-action e user-select, detecção saída do mouse','Seção "Sobre" adicionada: repositório / perfil GitHub / haazargames.com / voltar ao lobby'],
+                zh: ['彻底修复 3D 棋盘转动视角：改用 Pointer Events API（setPointerCapture + pointermove/up/cancel），完全阻断浏览器手势劫持；回退设备保留 touchstart preventDefault + changedTouches 精确坐标', '设置面板新增「关于」区域：仓库地址 / GitHub 主页 / haazargames.com / 回到大厅', '修复 lockC4Board 误清除已下棋 cell 的 disabled 状态', '统一 endGame 中 battleMode 的获取方式'],
+                en: ['Thoroughly fixed 3D board rotation: switched to Pointer Events API (setPointerCapture + pointermove/up/cancel) to fully block browser gesture hijacking; fallback devices keep touchstart preventDefault + changedTouches for precise coords', 'Settings drawer added "About" section: repo / GitHub profile / haazargames.com / back to lobby', 'Fixed lockC4Board incorrectly clearing disabled on occupied cells', 'Unified endGame battleMode access via getEffectiveBattleMode()'],
+                ja: ['3Dボード回転を根本修正：Pointer Events API（setPointerCapture + pointermove/up/cancel）に移行し、ブラウザジェスチャー介入を完全遮断；フォールバック端末は touchstart preventDefault + changedTouches 正確座標を維持','設定に「About」エリア追加：リポジトリ / GitHub / haazargames.com / ロビーに戻る','lockC4Board の occupied cell disabled 誤解除を修正','endGame の battleMode 取得を getEffectiveBattleMode() に統一'],
+                ko: ['3D 보드 회전 근본 수정: Pointer Events API(setPointerCapture + pointermove/up/cancel)로 전환하여 브라우저 제스처 개입 완전 차단; 폰백 기기는 touchstart preventDefault + changedTouches 정확한 좌표 유지','설정에 "About" 영역 추가: 저장소 / GitHub / haazargames.com / 로비로 돌아가기','lockC4Board 의 occupied cell disabled 오해제 수정','endGame battleMode 접근을 getEffectiveBattleMode() 로 통일'],
+                fr: ['Correction complète rotation plateau 3D : passage à Pointer Events API (setPointerCapture + pointermove/up/cancel) pour bloquer totalement le détournement des gestes navigateur ; appareils de secours conservent touchstart preventDefault + changedTouches pour coords précises','Ajout section "À propos" : dépôt / profil GitHub / haazargames.com / retour lobby','Correction lockC4Board ne retire plus disabled sur cellules occupées','Uniformisation endGame battleMode via getEffectiveBattleMode()'],
+                de: ['3D-Brett-Rotation gründlich korrigiert: Umstieg auf Pointer Events API (setPointerCapture + pointermove/up/cancel), um Browser-Geste-Übernahme vollständig zu blockieren; Fallback-Geräte behalten touchstart preventDefault + changedTouches für exakte Koordinaten','"Über"-Bereich hinzugefügt: Repository / GitHub-Profil / haazargames.com / Zurück zur Lobby','lockC4Board korrigiert: disabled nicht mehr auf besetzte Zellen entfernt','endGame battleMode auf getEffectiveBattleMode() vereinheitlicht'],
+                es: ['Corregida completamente rotación tablero 3D: migración a Pointer Events API (setPointerCapture + pointermove/up/cancel) para bloquear totalmente secuestro de gestos del navegador; dispositivos fallback conservan touchstart preventDefault + changedTouches para coords precisas','Sección "Acerca de" añadida: repositorio / perfil GitHub / haazargames.com / volver al lobby','lockC4Board corregido: no limpia disabled en celdas ocupadas','endGame battleMode unificado con getEffectiveBattleMode()'],
+                ru: ['Коренное исправление вращения 3D-доски: переход на Pointer Events API (setPointerCapture + pointermove/up/cancel) для полной блокировки перехвата жестов браузера; резервные устройства сохраняют touchstart preventDefault + changedTouches для точных координат','Добавлен раздел "О приложении": репозиторий / профиль GitHub / haazargames.com / вернуться в лобби','Исправлено lockC4Board: не снимает disabled с занятых ячеек','endGame battleMode унифицирован через getEffectiveBattleMode()'],
+                it: ['Corretto completamente rotazione scacchiera 3D: passaggio a Pointer Events API (setPointerCapture + pointermove/up/cancel) per bloccare totalmente il dirottamento dei gesti browser; dispositivi fallback mantengono touchstart preventDefault + changedTouches per coordinate precise','Aggiunta sezione "Informazioni": repository / profilo GitHub / haazargames.com / torna alla lobby','lockC4Board corretto: non rimuove disabled su celle occupate','endGame battleMode uniformato con getEffectiveBattleMode()'],
+                pt: ['Corrigida completamente rotação tabuleiro 3D: migração para Pointer Events API (setPointerCapture + pointermove/up/cancel) para bloquear totalmente sequestro de gestos do navegador; dispositivos fallback mantêm touchstart preventDefault + changedTouches para coords precisas','Seção "Sobre" adicionada: repositório / perfil GitHub / haazargames.com / voltar ao lobby','lockC4Board corrigido: não limpa disabled em células ocupadas','endGame battleMode unificado com getEffectiveBattleMode()'],
             }
         },
         {
@@ -865,10 +849,8 @@
     function onDragStart(e, board) {
         if (!settings.board3d) return;
         if (e.type === 'mousedown' && e.button !== 0) return;
-        if (e.cancelable) e.preventDefault();
-        const touch = e.touches && e.touches.length > 0 ? e.touches[0] : null;
-        const clientX = touch ? touch.clientX : e.clientX;
-        const clientY = touch ? touch.clientY : e.clientY;
+        const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
         rotState.active = true;
         rotState.moved = false;
         rotState.startX = clientX;
@@ -883,46 +865,56 @@
     function onDragMove(e) {
         if (!rotState.active || !rotState.board) return;
         if (e.type === 'mousemove' && e.buttons !== 1) { onDragEnd(); return; }
-        const touch = e.changedTouches && e.changedTouches.length > 0 ? e.changedTouches[0] : null;
-        const clientX = touch ? touch.clientX : e.clientX;
-        const clientY = touch ? touch.clientY : e.clientY;
+        const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
         const dx = clientX - rotState.startX;
         const dy = clientY - rotState.startY;
         if (!rotState.moved && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) {
             rotState.moved = true;
         }
         if (rotState.moved) {
-            if (e.cancelable) e.preventDefault();
             setBoardRot(rotState.board, rotState.startRotX - dy * 0.4, rotState.startRotY + dx * 0.4);
         }
     }
 
-    function onDragEnd(e) {
+    function onDragEnd() {
         if (!rotState.active || !rotState.board) return;
-        const wasMoved = rotState.moved;
         rotState.board.classList.remove('dragging');
         rotState.active = false;
         rotState.moved = false;
         rotState.board = null;
-        // Synthesize click for tap on touch devices (preventDefault in touchstart blocks native click)
-        if (!wasMoved && e && e.type === 'touchend') {
-            const touch = e.changedTouches && e.changedTouches.length > 0 ? e.changedTouches[0] : null;
-            if (touch) {
-                const target = document.elementFromPoint(touch.clientX, touch.clientY);
-                if (target) target.click();
-            }
-        }
     }
 
+    const hasPointerEvents = 'PointerEvent' in window;
     [boardEl, connect4Board, gomokuBoard].forEach(board => {
-        board.addEventListener('mousedown', e => onDragStart(e, board));
-        board.addEventListener('touchstart', e => onDragStart(e, board), { passive: false });
+        if (hasPointerEvents) {
+            board.addEventListener('pointerdown', e => {
+                if (!settings.board3d || e.button !== 0) return;
+                board.setPointerCapture(e.pointerId);
+                onDragStart(e, board);
+            });
+            board.addEventListener('pointermove', e => {
+                if (!rotState.active || rotState.board !== board) return;
+                onDragMove(e);
+            });
+            board.addEventListener('pointerup', e => {
+                if (rotState.board === board) onDragEnd();
+            });
+            board.addEventListener('pointercancel', e => {
+                if (rotState.board === board) onDragEnd();
+            });
+        } else {
+            board.addEventListener('mousedown', e => onDragStart(e, board));
+            board.addEventListener('touchstart', e => onDragStart(e, board), { passive: false });
+        }
     });
-    document.addEventListener('mousemove', onDragMove);
-    document.addEventListener('touchmove', onDragMove, { passive: false });
-    document.addEventListener('mouseup', onDragEnd);
-    document.addEventListener('touchend', onDragEnd);
-    window.addEventListener('blur', onDragEnd);
+    if (!hasPointerEvents) {
+        document.addEventListener('mousemove', onDragMove);
+        document.addEventListener('touchmove', onDragMove, { passive: false });
+        document.addEventListener('mouseup', onDragEnd);
+        document.addEventListener('touchend', onDragEnd);
+        window.addEventListener('blur', onDragEnd);
+    }
 
     function setDifficulty(diff) {
         if (settings.difficulty === diff) return;
