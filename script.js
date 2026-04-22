@@ -265,6 +265,22 @@
     /* ===== Changelog Data ===== */
     const changelogData = [
         {
+            version: '0.5.3.1',
+            date: { zh:'2026-04-20', en:'Apr 20, 2026', ja:'2026年4月20日', ko:'2026년 4월 20일', fr:'20 avr. 2026', de:'20. Apr. 2026', es:'20 abr. 2026', ru:'20 апр. 2026', it:'20 apr. 2026', pt:'20 de abr. de 2026' },
+            items: {
+                zh: ['3D 拖拽修复：touchstart 添加 preventDefault 阻止浏览器拦截，改用 changedTouches 获取精确坐标，touchend 短按自动合成 click 保证下棋正常，新增 window blur 监听防止鼠标离窗后拖拽失控', '修复 lockC4Board 误清除已下棋 cell 的 disabled 状态，现在只操作最下方空位 cell', '统一 endGame 中 battleMode 获取方式，改用 getEffectiveBattleMode()'],
+                en: ['3D drag fix: touchstart preventDefault blocks browser interception, changedTouches for precise coords, touchend tap synthesizes click to keep playing, window blur listener prevents stuck drag', 'Fixed lockC4Board incorrectly clearing disabled on occupied cells, now only targets bottom open cell', 'Unified endGame battleMode access via getEffectiveBattleMode()'],
+                ja: ['3Dドラッグ修正：touchstart に preventDefault 追加、changedTouches で正確な座標取得、タップ時に click 自動合成、window blur でドラッグ異常防止','lockC4Board の occupied cell disabled 誤解除を修正','endGame の battleMode 取得を getEffectiveBattleMode() に統一'],
+                ko: ['3D 드래그 수정: touchstart preventDefault 추가, changedTouches 로 정확한 좌표, 탭 시 click 자동 합성, window blur 로 드래그 이상 방지','lockC4Board 의 occupied cell disabled 오해제 수정','endGame battleMode 접근을 getEffectiveBattleMode() 로 통일'],
+                fr: ['Correction glisser-déposer 3D : preventDefault sur touchstart, changedTouches pour coords précises, synthèse click sur tap, blur fenêtre pour éviter drag bloqué','Correction lockC4Board ne retire plus disabled sur cellules occupées','Uniformisation endGame battleMode via getEffectiveBattleMode()'],
+                de: ['3D-Ziehen korrigiert: touchstart preventDefault, changedTouches für exakte Koordinaten, Click-Synthese bei Tap, window blur für hängenden Drag','lockC4Board korrigiert: disabled nicht mehr auf besetzte Zellen entfernt','endGame battleMode auf getEffectiveBattleMode() vereinheitlicht'],
+                es: ['Arrastre 3D corregido: preventDefault en touchstart, changedTouches para coords precisas, síntesis click en tap, blur ventana para drag bloqueado','lockC4Board corregido: no limpia disabled en celdas ocupadas','endGame battleMode unificado con getEffectiveBattleMode()'],
+                ru: ['Исправлено 3D-перетаскивание: preventDefault в touchstart, changedTouches для точных координат, синтез click при тапе, window blur для зависшего перетаскивания','Исправлено lockC4Board: не снимает disabled с занятых ячеек','endGame battleMode унифицирован через getEffectiveBattleMode()'],
+                it: ['Trascinamento 3D corretto: preventDefault su touchstart, changedTouches per coordinate precise, sintesi click su tap, blur finestra per trascinamento bloccato','lockC4Board corretto: non rimuove disabled su celle occupate','endGame battleMode uniformato con getEffectiveBattleMode()'],
+                pt: ['Arrasto 3D corrigido: preventDefault no touchstart, changedTouches para coords precisas, síntese click no tap, blur janela para drag travado','lockC4Board corrigido: não limpa disabled em células ocupadas','endGame battleMode unificado com getEffectiveBattleMode()'],
+            }
+        },
+        {
             version: '0.5.3',
             date: { zh:'2026-04-20', en:'Apr 20, 2026', ja:'2026年4月20日', ko:'2026년 4월 20일', fr:'20 avr. 2026', de:'20. Apr. 2026', es:'20 abr. 2026', ru:'20 апр. 2026', it:'20 apr. 2026', pt:'20 de abr. de 2026' },
             items: {
@@ -849,8 +865,10 @@
     function onDragStart(e, board) {
         if (!settings.board3d) return;
         if (e.type === 'mousedown' && e.button !== 0) return;
-        const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
+        if (e.cancelable) e.preventDefault();
+        const touch = e.touches && e.touches.length > 0 ? e.touches[0] : null;
+        const clientX = touch ? touch.clientX : e.clientX;
+        const clientY = touch ? touch.clientY : e.clientY;
         rotState.active = true;
         rotState.moved = false;
         rotState.startX = clientX;
@@ -865,25 +883,35 @@
     function onDragMove(e) {
         if (!rotState.active || !rotState.board) return;
         if (e.type === 'mousemove' && e.buttons !== 1) { onDragEnd(); return; }
-        const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
+        const touch = e.changedTouches && e.changedTouches.length > 0 ? e.changedTouches[0] : null;
+        const clientX = touch ? touch.clientX : e.clientX;
+        const clientY = touch ? touch.clientY : e.clientY;
         const dx = clientX - rotState.startX;
         const dy = clientY - rotState.startY;
         if (!rotState.moved && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) {
             rotState.moved = true;
-            if (e.cancelable) e.preventDefault();
         }
         if (rotState.moved) {
+            if (e.cancelable) e.preventDefault();
             setBoardRot(rotState.board, rotState.startRotX - dy * 0.4, rotState.startRotY + dx * 0.4);
         }
     }
 
-    function onDragEnd() {
+    function onDragEnd(e) {
         if (!rotState.active || !rotState.board) return;
+        const wasMoved = rotState.moved;
         rotState.board.classList.remove('dragging');
         rotState.active = false;
         rotState.moved = false;
         rotState.board = null;
+        // Synthesize click for tap on touch devices (preventDefault in touchstart blocks native click)
+        if (!wasMoved && e && e.type === 'touchend') {
+            const touch = e.changedTouches && e.changedTouches.length > 0 ? e.changedTouches[0] : null;
+            if (touch) {
+                const target = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (target) target.click();
+            }
+        }
     }
 
     [boardEl, connect4Board, gomokuBoard].forEach(board => {
@@ -894,6 +922,7 @@
     document.addEventListener('touchmove', onDragMove, { passive: false });
     document.addEventListener('mouseup', onDragEnd);
     document.addEventListener('touchend', onDragEnd);
+    window.addEventListener('blur', onDragEnd);
 
     function setDifficulty(diff) {
         if (settings.difficulty === diff) return;
@@ -1550,9 +1579,11 @@
 
     function lockC4Board(lock) {
         document.querySelectorAll('.c4-cell').forEach(cell => {
+            if (cell.querySelector('.c4-piece')) return;
             const col = parseInt(cell.dataset.col, 10);
-            const row = getC4NextOpenRow(col);
-            if (row !== -1) cell.classList.toggle('disabled', lock);
+            const cellRow = parseInt(cell.dataset.row, 10);
+            const nextRow = getC4NextOpenRow(col);
+            if (nextRow !== -1 && cellRow === nextRow) cell.classList.toggle('disabled', lock);
         });
     }
 
@@ -2050,11 +2081,12 @@
         gameActive = false;
         lockBoard(true);
 
+        const bm = getEffectiveBattleMode();
         if (draw) {
             scores.draw++;
             animateScore(scoreDrawEl);
             playDrawSound();
-            const msg = battleMode === 'aivsai' ? t('modal-draw-aivsai') : battleMode === 'pve' ? t('modal-draw-pve') : t('modal-draw-pvp');
+            const msg = bm === 'aivsai' ? t('modal-draw-aivsai') : bm === 'pve' ? t('modal-draw-pve') : t('modal-draw-pvp');
             showModal('🤝', t('status-draw'), msg);
             updateStatus(t('status-draw'), null);
         } else {
@@ -2066,16 +2098,16 @@
             let icon, title, msg;
             if (winner === PLAYER_X) {
                 title = getWinnerText(winner);
-                icon = battleMode === 'aivsai' ? '⚡' : '🎉';
-                if (battleMode === 'aivsai') msg = t('modal-ai-x-wins');
-                else if (battleMode === 'pvp') msg = t('modal-player1-wins');
+                icon = bm === 'aivsai' ? '⚡' : '🎉';
+                if (bm === 'aivsai') msg = t('modal-ai-x-wins');
+                else if (bm === 'pvp') msg = t('modal-player1-wins');
                 else msg = t('modal-you-win');
                 updateStatus(title, 'x');
             } else {
                 title = getWinnerText(winner);
-                icon = battleMode === 'aivsai' ? '⚡' : (battleMode === 'pvp' ? '🔥' : '🤖');
-                if (battleMode === 'aivsai') msg = t('modal-ai-o-wins');
-                else if (battleMode === 'pvp') msg = t('modal-player2-wins');
+                icon = bm === 'aivsai' ? '⚡' : (bm === 'pvp' ? '🔥' : '🤖');
+                if (bm === 'aivsai') msg = t('modal-ai-o-wins');
+                else if (bm === 'pvp') msg = t('modal-player2-wins');
                 else msg = t('modal-ai-wins');
                 updateStatus(title, 'o');
             }
